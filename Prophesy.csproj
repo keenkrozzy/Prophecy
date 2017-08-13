@@ -18,10 +18,11 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>Assemblies\</OutputPath>
+    <OutputPath>G:\Rimworld Local\RimWorld1557Win\Mods\Prophesy_dev1.1.2\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -32,8 +33,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>GitHub_Resources\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\RimWorldWin_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>GitHub_Resources\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -42,10 +46,37 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>GitHub_Resources\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Source\Class1.cs" />
+    <Compile Include="Meta\ModWindowHelper.cs" />
+    <Compile Include="Meta\KeenInsight.cs" />
+    <Compile Include="Meta\ProphecySettings.cs" />
+    <Compile Include="ProGame\ProPawnBioAndNameGenerator.cs" />
+    <Compile Include="ProGame\ProTraverses.cs" />
+    <Compile Include="ProGame\Elements\ProBackstories.cs" />
+    <Compile Include="Meta\FrameRateCounter.cs" />
+    <Compile Include="Meta\KrozzyUtilities.cs" />
+    <Compile Include="Meta\ProDFMO.cs" />
+    <Compile Include="Meta\ProListableOption.cs" />
+    <Compile Include="Meta\ProListableOption_WebLink.cs" />
+    <Compile Include="Meta\ProOptionListingUtility.cs" />
+    <Compile Include="PreGame\ePNC_Card_Type.cs" />
+    <Compile Include="PreGame\PNC_Card.cs" />
+    <Compile Include="PreGame\ProCWP.cs" />
+    <Compile Include="PreGame\ProDMMCp.cs" />
+    <Compile Include="PreGame\ProMMOGUI.cs" />
+    <Compile Include="PreGame\ProPNC.cs" />
+    <Compile Include="PreGame\ProSLS.cs" />
+    <Compile Include="PreGame\ProSM.cs" />
+    <Compile Include="PreGame\ProUIBGMp.cs" />
+    <Compile Include="ProGame\ProNGSPp.cs" />
+    <Compile Include="ProGame\ProPawnGenerator.cs" />
     <Compile Include="Source\Properties\AssemblyInfo.cs" />
+    <Compile Include="Stock\ProTBin.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Defs\" />
@@ -54,8 +85,13 @@
   <ItemGroup>
     <None Include="About\About.xml" />
     <None Include="About\Preview.png" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
+    <None Include="ClassDiagram3.cd" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="PreGame\Notes.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
