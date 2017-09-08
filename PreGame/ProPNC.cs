@@ -355,13 +355,13 @@ namespace Prophesy.PreGame
 				for (int x = 0; x < intcardsneeded - 1; x++)
 				{
 					lstPNC_Cards.Add(new PNC_Card(lstPawns[x], intcardsneeded));
-					Log.Message("Added card");
+					Log.Message("Added pawn card");
 				}
 
 				// Make Items Card
 				lstPNC_Cards.Add(new PNC_Card(null, intcardsneeded));
-
-				intCardNum = intcardsneeded;
+                Log.Message("Added item card");
+                intCardNum = intcardsneeded;
 			}
 
 			// Set initial Card Order

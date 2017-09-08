@@ -53,9 +53,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Meta\ModWindowHelper.cs" />
-    <Compile Include="Meta\KeenInsight.cs" />
+    <Compile Include="PreGame\ESApparel.cs" />
+    <Compile Include="PreGame\ESFoods.cs" />
+    <Compile Include="PreGame\ESStartingItems.cs" />
+    <Compile Include="PreGame\ProEquipmentShop.cs" />
     <Compile Include="Meta\ProphecySettings.cs" />
+    <Compile Include="ProGame\ProGenStep_ScatterThings.cs" />
     <Compile Include="ProGame\ProPawnBioAndNameGenerator.cs" />
+    <Compile Include="ProGame\ProScenPart_ScatterThingsNearPlayerStart.cs" />
     <Compile Include="ProGame\ProTraverses.cs" />
     <Compile Include="ProGame\Elements\ProBackstories.cs" />
     <Compile Include="Meta\FrameRateCounter.cs" />
@@ -85,8 +90,6 @@
   <ItemGroup>
     <None Include="About\About.xml" />
     <None Include="About\Preview.png" />
-    <None Include="ClassDiagram1.cd" />
-    <None Include="ClassDiagram2.cd" />
     <None Include="ClassDiagram3.cd" />
   </ItemGroup>
   <ItemGroup>

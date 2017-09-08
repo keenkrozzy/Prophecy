@@ -194,16 +194,42 @@ Text.Font = GameFont.Small;
 	public static ThingCategoryDef Art;
 	public static ThingCategoryDef Manufactured;
 
+Root : 8				Foods Manufactured ResourcesRaw Items Weapons Apparel Chunks Corpses
+Apparel : 1				Headgear
+Art : 0
+BodyParts : 2			BodyPartsNatural BodyPartsArtificial
+Chunks : 1				StoneChunks
+Corpses : 3				CorpsesHumanlike CorpsesAnimal CorpsesMechanoid
+CorpsesAnimal : 1		CorpsesInsect
+CorpsesHumanlike : 0
+CorpsesInsect : 0
+CorpsesMechanoid : 0
+Drugs : 0
+FoodMeals : 0
+Foods : 2				FoodMeals FoodRaw
+Items : 5				Art Furniture Unfinished Artifacts BodyParts
+Leathers : 0
+Manufactured : 3		Textiles Medicine Drugs
+MeatRaw : 0
+Medicine : 0
+PlantFoodRaw : 0
+PlantMatter : 0
+ResourcesRaw : 2		PlantMatter StoneBlocks
+StoneBlocks : 0
+Weapons : 2				WeaponsMelee WeaponsRanged
 
 
 
-	game edge -227
-	Page edge -17
-	Card edge 158
-	tab edge 180
 
 
-		
+
+
+
+
+
+
+
+
 
 		
 

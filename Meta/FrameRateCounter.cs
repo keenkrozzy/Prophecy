@@ -50,8 +50,9 @@ namespace Prophesy.Meta
             Text.Font = GameFont.Small;
             GUI.color = new Color(1f, 1f, 1f, 0.5f);
 
-            Rect rectWindow = new Rect((UI.screenWidth / 2) - 50, UI.screenHeight / 2, Text.CalcSize(_str).x + 10f, Text.CalcHeight(_str, 100f));
-            Rect rectFPS = new Rect(5f, 0f, Text.CalcSize(_str).x, Text.CalcHeight(_str, 100f));
+			//Rect rectWindow = new Rect((UI.screenWidth / 2) - 50, UI.screenHeight / 2, Text.CalcSize(_str).x + 10f, Text.CalcHeight(_str, 100f));
+			Rect rectWindow = new Rect(0f, 0f, Text.CalcSize(_str).x + 10f, Text.CalcHeight(_str, 100f));
+			Rect rectFPS = new Rect(5f, 0f, Text.CalcSize(_str).x, Text.CalcHeight(_str, 100f));
 
             Find.WindowStack.ImmediateWindow(1987, rectWindow, WindowLayer.GameUI, () => Widgets.Label(rectFPS, _str));
 

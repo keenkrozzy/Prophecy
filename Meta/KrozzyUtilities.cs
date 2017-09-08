@@ -8,6 +8,26 @@ namespace Prophesy.Meta
 {
 	public static class KrozzyUtilities
 	{
+		private static Font[] fontStyles = new Font[3];
+		private static Color[] colors = new Color[3];
+
+		static KrozzyUtilities()
+		{
+			fontStyles[0] = (Font)Resources.Load("Fonts/Arial_small");
+			fontStyles[1] = (Font)Resources.Load("Fonts/Arial_medium");
+			fontStyles[2] = (Font)Resources.Load("Fonts/Calibri_tiny");
+			colors[0] = Color.black;
+			colors[1] = Color.white;
+			colors[2] = Color.yellow;
+		}
+
+		/// <summary>
+		/// Add Rects together. Useful for windows within windows or UI groups within windows.
+		/// Spdskatr - Today at 10:56 PM ...
+		/// Spdskatr - Today at 10:56 PM That doesnt make sense
+		/// </summary>
+		/// <param name="_bAddPosistion">Add x and y</param>
+		/// <param name="_bAddSize">Add width and height</param>
 		public static Rect RectAddition(Rect _rect1, Rect _rect2, bool _bAddPosistion = true, bool _bAddSize = false)
 		{
 			Rect rect = _rect1;
@@ -24,9 +44,6 @@ namespace Prophesy.Meta
 			}
 
 			return rect;
-
-			// Spdskatr - Today at 10:56 PM ...
-			// Spdskatr - Today at 10:56 PM That doesnt make sense
 		}
 
 		/// <summary>
@@ -38,23 +55,32 @@ namespace Prophesy.Meta
 		{
 			// Prepare variables for tooltip
 			Rect rectWindow = _rectCurrentWindow;
-			float floWindowMargin = 18f; // Margin put in by base class Window with optionalTitle = null
 			float floCursorOffsetX = 22f;
 			float floCursorOffsetY = 24f;
-			Vector2 vectMouse = Event.current.mousePosition;
-			Vector2 vectTooltipSize = Text.CalcSize(_strTooltip);
+			Vector2 vectMouse = MousePosition();
+			Vector2 vectTooltipSize0 = new Vector2();
+			Vector2 vectTooltipSize1 = Text.CalcSize(_strTooltip);
+			Vector2 vectTooltipSize2 = new Vector2((float)UI.screenWidth * .3f, Text.CalcHeight(_strTooltip, (float)UI.screenWidth * .3f));
+			if (vectTooltipSize2.y > vectTooltipSize1.y)
+			{
+				vectTooltipSize0 = vectTooltipSize2;
+			}
+			else
+			{
+				vectTooltipSize0 = vectTooltipSize1;
+			}
 			string strTemp = _strTooltip;
 
 			// Shape the tooltip
-			vectMouse.x += floWindowMargin + floCursorOffsetX;
-			vectMouse.y += floWindowMargin + floCursorOffsetY;
-			Rect rectTooltipContainer = new Rect(vectMouse, vectTooltipSize);
-			Rect rectTooltip = new Rect(0f, 0f, vectTooltipSize.x, vectTooltipSize.y);
+			vectMouse.x += floCursorOffsetX;
+			vectMouse.y += floCursorOffsetY;
+			Rect rectTooltipContainer = new Rect(vectMouse, vectTooltipSize0);
+			Rect rectTooltip = new Rect(0f, 0f, vectTooltipSize0.x, vectTooltipSize0.y);
 
 			// Draw the tooltip
-			Find.WindowStack.ImmediateWindow(140 * _strTooltip.GetHashCode() + 85708, KrozzyUtilities.RectAddition(rectTooltipContainer, rectWindow), WindowLayer.Super, delegate
+			Find.WindowStack.ImmediateWindow(140 * _strTooltip.GetHashCode() + 85708, rectTooltipContainer, WindowLayer.Super, delegate
 			{
-				Widgets.DrawBoxSolid(rectTooltip, Color.black);
+			Widgets.DrawBoxSolid(rectTooltip, new Color(0f, 0f, 0f, .7f));
 				try
 				{
 					Widgets.Label(rectTooltip, strTemp);
@@ -66,5 +92,40 @@ namespace Prophesy.Meta
 			}, false, false, 1f);
 		}
 
+		/// <summary>
+		/// Returns the true mouse position, inverted to work with the UI.
+		/// </summary>
+		public static Vector2 MousePosition()
+		{
+			Vector2 mousePositionOnUI = UI.MousePositionOnUI;
+			mousePositionOnUI.y = (float)UI.screenHeight - mousePositionOnUI.y;
+			return mousePositionOnUI;
+		}
+
+		public static GUIStyle BuildStyle(Fonts _font, Colors _color)
+		{
+			GUIStyle style = new GUIStyle();
+
+			style.font = fontStyles[(int)_font];
+			style.normal.textColor = colors[(int)_color];
+
+			return style;
+		}
+
 	}
+
+	public enum Colors
+	{
+		Black,
+		White,
+		Yellow
+	}
+
+	public enum Fonts
+	{
+		Arial_small,
+		Arial_medium,
+		Calibri_tiny
+	}
+
 }

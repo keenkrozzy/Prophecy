@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Harmony;
+using System.Reflection;
 using RimWorld;
 using Verse;
 using UnityEngine;
 using Prophesy.Meta;
 using System.Text.RegularExpressions;
 using Prophesy.Stock;
+using Prophesy.ProGame;
 
 namespace Prophesy.PreGame
 {
@@ -25,6 +28,17 @@ namespace Prophesy.PreGame
 		private Texture2D[] atexTabs = new Texture2D[6] { ProTBin.texFoodsTab, ProTBin.texApparelTab, ProTBin.texWeaponsTab, ProTBin.texDrugsTab, ProTBin.texResourcesTab, ProTBin.texItemsTab };
 		private bool[] aboolCurTab = { true, false, false, false, false, false };
 		private string[] astrTabTooltip = { "Foods", "Apparel", "Weapons", "Drugs", "Resources", "Items" };
+		private Vector2 v2FoodsScrollPosition = Vector2.zero;
+		private int intCurSelectedToEquip = 0;
+        private int intCurSelectedToUnequip = 0;
+        private ESItem esItemCurSelectedToEquip = null;
+        private int intCurSelectedAmountToEquip = 0;
+        private float floCurSelectedPriceToEquip = 0f;
+        private ESItem esItemCurSelectedToUnequip = null;
+        private int intCurSelectedAmountToUnequip = 0;
+        private int intCurSelectedPriceToUnequip = 0;
+        private ProEquipmentShop ES;
+        
 
 		public PNC_Card(Pawn _pawn = null, int _intNumCards = 0)
 		{
@@ -36,7 +50,9 @@ namespace Prophesy.PreGame
 			else
 			{
 				eCardType = ePNC_Card_Type.Items;
-			}
+				ES = new ProEquipmentShop();
+                Log.Message("PNC_Card ctor fired for items card.");
+            }
 
 			intNumCards = _intNumCards; 
 		}
@@ -48,10 +64,6 @@ namespace Prophesy.PreGame
 		{
 			Widgets.DrawMenuSection(_rect, true);
 			rectCard = _rect;
-			//Log.Message("PNC_Card " + GetLabel() + _rect.ToString());
-
-			// For design guiding
-			//DoGrid();
 
 			if (eCardType == ePNC_Card_Type.Pawn)
 			{
@@ -68,19 +80,32 @@ namespace Prophesy.PreGame
 			{
 				DrawLabel(_rect);
 				DoTabs();
-			}
+                DoStartingItems();
+                DoEquipButton();
+                DoUnequipButton();
+                DoTotalCostLabel();
+            }
 
 
 
 
 		}
 
-		public void DrawCardTopOnly(Rect _rect)
+        /***********************************************************************************
+		* Method to only draw the top of the card if it is not the first card in the stack *
+		***********************************************************************************/
+        public void DrawCardTopOnly(Rect _rect)
 		{
 			Widgets.DrawMenuSection(_rect, true);
 			rectCard = _rect;
 			DrawLabel(_rect);
-		}
+
+            if (eCardType == ePNC_Card_Type.Items)
+            {
+                DoTotalCostLabel();
+            }
+
+        }
 
 		private void DrawLabel(Rect _rect)
 		{
@@ -111,60 +136,58 @@ namespace Prophesy.PreGame
 			Text.Font = GameFont.Small;
 		}
 
-		private void DrawPawnPortrait()
+        /***************************************
+		* Method to handle the pawn's portrait *
+		***************************************/
+        private void DrawPawnPortrait()
 		{
+            // Shape the portrait
+			Rect rect = new Rect(rectCard.x + (rectCard.width * .85f), rectCard.y + (rectCard.height * .05f), PawnPortraitSize.x, PawnPortraitSize.y);
+			Vector3 vector3 = new Vector3();
 
-			
-				Rect rect = new Rect(rectCard.x + (rectCard.width * .85f), rectCard.y + (rectCard.height * .05f), PawnPortraitSize.x, PawnPortraitSize.y);
-
-				//Vector2 vector21 = PawnPortraitSize;
-				Vector3 vector3 = new Vector3();
-				GUI.DrawTexture(rect, PortraitsCache.Get(pawn, PawnPortraitSize, vector3, 1f));
-			
+            // Draw the portrait
+			GUI.DrawTexture(rect, PortraitsCache.Get(pawn, PawnPortraitSize, vector3, 1f));
 		}
 
-		private void DoNameInput()
+        /************************************************************
+		* Draw Name input text boxes with text set to current name. *
+		************************************************************/
+        private void DoNameInput()
 		{
-				/************************************************************
-				* Draw Name input text boxes with text set to current name. *
-				************************************************************/
-				NameTriple nameTriple = pawn.Name as NameTriple;
-				string first = nameTriple.First;
-				string nick = nameTriple.Nick;
-				string last = nameTriple.Last;
+			NameTriple nameTriple = pawn.Name as NameTriple;
+			string first = nameTriple.First;
+			string nick = nameTriple.Nick;
+			string last = nameTriple.Last;
 
-				Rect rect = new Rect(rectCard.x + (rectCard.width * .85f), rectCard.y + (rectCard.height * .26f), PawnPortraitSize.x, PawnPortraitSize.y * .2f);
-				Rect rectOffset = new Rect(0f,PawnPortraitSize.y * .22f,0f,0f);
+			Rect rect = new Rect(rectCard.x + (rectCard.width * .85f), rectCard.y + (rectCard.height * .26f), PawnPortraitSize.x, PawnPortraitSize.y * .2f);
+			Rect rectOffset = new Rect(0f,PawnPortraitSize.y * .22f,0f,0f);
 
-				string strFirst = Widgets.TextField(rect, first);
-				if (strFirst.Length <= 12 && validNameRegex.IsMatch(strFirst))
-				{
-					first = strFirst;
-				}
+			string strFirst = Widgets.TextField(rect, first);
+			if (strFirst.Length <= 12 && validNameRegex.IsMatch(strFirst))
+			{
+				first = strFirst;
+			}
 
-				string strNick = Widgets.TextField(KrozzyUtilities.RectAddition(rect, rectOffset), nick);
-				if (strNick.Length <= 9 && validNameRegex.IsMatch(strNick))
-				{
-					nick = strNick;
-				}
+			string strNick = Widgets.TextField(KrozzyUtilities.RectAddition(rect, rectOffset), nick);
+			if (strNick.Length <= 9 && validNameRegex.IsMatch(strNick))
+			{
+				nick = strNick;
+			}
 
-				string strLast = Widgets.TextField(KrozzyUtilities.RectAddition(KrozzyUtilities.RectAddition(rect, rectOffset),rectOffset), last);
-				if (strLast.Length <= 12 && validNameRegex.IsMatch(strLast))
-				{
-					last = strLast;
-				}
+			string strLast = Widgets.TextField(KrozzyUtilities.RectAddition(KrozzyUtilities.RectAddition(rect, rectOffset),rectOffset), last);
+			if (strLast.Length <= 12 && validNameRegex.IsMatch(strLast))
+			{
+				last = strLast;
+			}
 
-				if (nameTriple.First != first || nameTriple.Nick != nick || nameTriple.Last != last)
-				{
-					pawn.Name = new NameTriple(first, nick, last);
-				}
+			if (nameTriple.First != first || nameTriple.Nick != nick || nameTriple.Last != last)
+			{
+				pawn.Name = new NameTriple(first, nick, last);
+			}
 
-				TooltipHandler.TipRegion(rect, "FirstNameDesc".Translate());
-				TooltipHandler.TipRegion(KrozzyUtilities.RectAddition(rect, rectOffset), "ShortIdentifierDesc".Translate());
-				TooltipHandler.TipRegion(KrozzyUtilities.RectAddition(KrozzyUtilities.RectAddition(rect, rectOffset), rectOffset), "LastNameDesc".Translate());
-
-			
-
+			TooltipHandler.TipRegion(rect, "FirstNameDesc".Translate());
+			TooltipHandler.TipRegion(KrozzyUtilities.RectAddition(rect, rectOffset), "ShortIdentifierDesc".Translate());
+			TooltipHandler.TipRegion(KrozzyUtilities.RectAddition(KrozzyUtilities.RectAddition(rect, rectOffset), rectOffset), "LastNameDesc".Translate());
 		}
 
 		private void DoMainDesc()
@@ -173,7 +196,6 @@ namespace Prophesy.PreGame
 			Rect rect = new Rect(rectCard.width * .05f, rectCard.height * .05f, Text.CalcSize(strMainDesc).x, Text.CalcSize(strMainDesc).y);
 			Widgets.Label(KrozzyUtilities.RectAddition(rect, rectCard),strMainDesc);
 			TooltipHandler.TipRegion(KrozzyUtilities.RectAddition(rect, rectCard), () => pawn.ageTracker.AgeTooltipString, 6873641);
-
 		}
 
 		private void DoBackstories()
@@ -189,7 +211,6 @@ namespace Prophesy.PreGame
 			Widgets.Label(KrozzyUtilities.RectAddition(rect, rectCard), strBSLabel);
 			Text.Font = GameFont.Small;
 
-			
 			// Get texts and text sizes for scroll view
 			string strBSChildhood = "Childhood".Translate() + ": ";
 			Vector2 v2BSChildhood = Text.CalcSize(strBSChildhood);
@@ -316,7 +337,6 @@ namespace Prophesy.PreGame
 					Widgets.Label(KrozzyUtilities.RectAddition(rectSkillBar, rectCard), pawn.skills.skills[j].Level.ToString());
 				}
 
-
 				floAdjustY += floTextHeight;
 
 			}
@@ -355,6 +375,7 @@ namespace Prophesy.PreGame
 
 				floAdjustY += floTextHeight;
 			}
+
 			Text.Anchor = TextAnchor.UpperLeft;
 
 		}
@@ -379,8 +400,15 @@ namespace Prophesy.PreGame
 					// Shape the tab button
 					Rect rectTabUnfocusedButton = new Rect(rectTabUnfocused.x, rectTabUnfocused.y + (rectTabUnfocused.height * .34f), rectTabUnfocused.width, rectTabUnfocused.height - (rectTabUnfocused.height * .34f));
 
-					// Draw the tab button
-
+                    // Draw the tab button
+                    if (Widgets.ButtonInvisible(KrozzyUtilities.RectAddition(rectTabUnfocusedButton, rectCard), true))
+                    {
+                        for (int i = 0; i < 6; i++)
+                        {
+                            aboolCurTab[i] = false;
+                        }
+                        aboolCurTab[x] = true;
+                    }
 
 					// Do tooltip
 					if (Mouse.IsOver(KrozzyUtilities.RectAddition(rectTabUnfocusedButton, rectCard)))
@@ -413,9 +441,6 @@ namespace Prophesy.PreGame
 					// Shape the tab button
 					Rect rectTabfocusedButton = new Rect(rectTabFocused.x, rectTabFocused.y + (rectTabFocused.height * .34f), rectTabFocused.width, rectTabFocused.height - (rectTabFocused.height * .34f));
 
-					// Draw the tab button
-
-
 					// Do tooltip
 					if (Mouse.IsOver(KrozzyUtilities.RectAddition(rectTabfocusedButton, rectCard)))
 					{
@@ -423,75 +448,280 @@ namespace Prophesy.PreGame
 					}
 
 					// Do the sheet
-					itemSheet();
+					switch (astrTabTooltip[x])
+					{
+						case "Foods":
+						ItemSheet(rectMenuSection, ES.Foods.aFoods, GameFont.Small);
+						break;
+
+                        case "Apparel":
+                        ItemSheet(rectMenuSection, ES.Foods.aFoods, GameFont.Small);
+                        break;
+
+                        case "Weapons":
+                        ItemSheet(rectMenuSection, ES.Foods.aFoods, GameFont.Small);
+                        break;
+
+                        case "Drugs":
+                        ItemSheet(rectMenuSection, ES.Foods.aFoods, GameFont.Small);
+                        break;
+
+                        case "Resources":
+                        ItemSheet(rectMenuSection, ES.Foods.aFoods, GameFont.Small);
+                        break;
+
+                        case "Items":
+                        ItemSheet(rectMenuSection, ES.Foods.aFoods, GameFont.Small);
+                        break;
+                    }
 				}
 			}
 		}
 
-		private void itemSheet()
+		private void ItemSheet(Rect _rectOut, ESItem[] _aItems, GameFont _fontSize)
 		{
+            // Shape item sheet
+            float floViewWidth = _rectOut.width - 16f; // Scrollbar has 16f hard number           
+            float floColumnNameWidth = floViewWidth * .5f;
+            float floColumnQuantityWidth = floViewWidth * .25f;
+            float floColumnCostWidth = floViewWidth * .25f;
+            Text.Font = _fontSize;
+            float TotalHeight = 0f;
+            foreach (ESItem item in _aItems)
+            {
+                TotalHeight += Text.CalcHeight(item.thingDef.label, floColumnNameWidth);
+            }
+            Rect rectView = new Rect();
+            if (TotalHeight > _rectOut.height) {rectView = new Rect(_rectOut.x, _rectOut.y, floViewWidth, TotalHeight);}
+            else {rectView = new Rect(_rectOut.x, _rectOut.y, _rectOut.width, TotalHeight);}
+            
+			Rect rectGroup = KrozzyUtilities.RectAddition(rectView, rectCard);
+			Rect rectScrollingTooltip = KrozzyUtilities.RectAddition(_rectOut, rectCard);
+            
+            // Begin scroll view and group
+            Widgets.BeginScrollView(KrozzyUtilities.RectAddition(_rectOut, rectCard), ref v2FoodsScrollPosition, KrozzyUtilities.RectAddition(rectView, rectCard));
+			GUI.BeginGroup(rectGroup);
 
-			Log.Message(GenDefDatabase.AllDefTypesWithDatabases().ToString());
-		}
+            // Create list of items from array
+            float floYPos = 0f;
+			for (int i = 0; i < _aItems.Length - 1; i++)
+			{
+                string strNameLabel = _aItems[i].thingDef.label;
+                string strQauntityLabel = _aItems[i].thingAmount.ToString();
+                string strCostLabel = String.Format( "{0:0}", ES.GetPrice(_aItems[i]));
+                string strDescToolTip = _aItems[i].thingDef.description;
+
+                // Shape idividual item
+                Rect rectWholeItem = new Rect(0f, floYPos, rectView.width, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+                Rect rectNameLabel = new Rect(0f, floYPos, floColumnNameWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+                Rect rectQauntityLabel = new Rect(floColumnNameWidth, floYPos, floColumnQuantityWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+                Rect rectCostLabel = new Rect(floColumnNameWidth + floColumnQuantityWidth, floYPos, floColumnCostWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+
+                // update y position for next label
+                floYPos += Text.CalcHeight(strNameLabel, floColumnNameWidth);
+
+                // Draw label based upon if it's currently selected
+                if (i == intCurSelectedToEquip)
+				{
+					GUI.Label(rectNameLabel, strNameLabel, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Yellow));
+                    GUI.Label(rectQauntityLabel, strQauntityLabel, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Yellow));
+                    GUI.Label(rectCostLabel, strCostLabel, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Yellow));
+
+                    // Prime variable for equip button
+                    esItemCurSelectedToEquip = _aItems[i];
+                    //intCurSelectedAmountToEquip = _aItems[i].amount;
+                    //floCurSelectedPriceToEquip = ES.GetPrice(_aItems[i]);
+                }
+				else
+				{
+					Widgets.Label(rectNameLabel, strNameLabel);
+                    Widgets.Label(rectQauntityLabel, strQauntityLabel);
+                    Widgets.Label(rectCostLabel, strCostLabel);
+                }
+
+                // Highlight is mouse is hovering over
+				if (Mouse.IsOver(rectWholeItem))
+				{
+					KrozzyUtilities.Tooltip(KrozzyUtilities.RectAddition(rectScrollingTooltip, Find.WindowStack.currentlyDrawnWindow.windowRect), strDescToolTip);
+                    Widgets.DrawHighlight(rectWholeItem);                    
+				}
+
+                // Draw invisible button for item selecting
+                if (Widgets.ButtonInvisible(rectWholeItem, true))
+                {
+                    intCurSelectedToEquip = i;
+                }
+            }
+
+			// End group and scroll view
+			GUI.EndGroup();
+			Widgets.EndScrollView();
+            Text.Font = GameFont.Small; // Ensure font size is back to default
+        }
+
+        private void DoStartingItems()
+        {
+            // Calculate variables		
+            float floMenuHeight = rectCard.height * .8f;
+            ESItem[] esiStartingItems = ES.StartingItems.aStartingItems;
+
+            // Shape the menu section
+            Rect rectMenuSection = new Rect(rectCard.width * .625f, rectCard.height * .1f, rectCard.width * .3f, floMenuHeight);
+
+            // Draw the menu section
+            GUI.DrawTexture(KrozzyUtilities.RectAddition(rectMenuSection, rectCard), ProTBin.texVellum, ScaleMode.ScaleAndCrop);
+            GUI.color = cintBorder.ToColor;
+            Widgets.DrawBox(KrozzyUtilities.RectAddition(rectMenuSection, rectCard), 1);
+            GUI.color = Color.white; // set GUI color back to default
+
+            // Shape item sheet
+            float floViewWidth = rectMenuSection.width - 16f; // Scrollbar has 16f hard number           
+            float floColumnNameWidth = floViewWidth * .5f;
+            float floColumnQuantityWidth = floViewWidth * .25f;
+            float floColumnCostWidth = floViewWidth * .25f;
+            Text.Font = GameFont.Small; // Make sure the font is default for size calculation
+            float TotalHeight = 0f;
+
+            // Calculate total height of items
+            foreach (ESItem item in esiStartingItems)
+            {
+                TotalHeight += Text.CalcHeight(item.thingDef.label, floColumnNameWidth);
+            }
+
+            // If the total height of items in more than the menu section height, make scroll view fit inside the menu
+            // Else make the scroll view wide enough so the highlighted item is not clipped
+            Rect rectView = new Rect();
+            if (TotalHeight > rectMenuSection.height)
+            {
+                rectView = new Rect(rectMenuSection.x, rectMenuSection.y, floViewWidth, TotalHeight);
+            }
+            else
+            {
+                rectView = new Rect(rectMenuSection.x, rectMenuSection.y, rectMenuSection.width, TotalHeight);
+            }
+
+            // Shape the group and shape the tooltip so that it does not scroll inside the scroll view
+            Rect rectGroup = KrozzyUtilities.RectAddition(rectView, rectCard);
+            Rect rectScrollingTooltip = KrozzyUtilities.RectAddition(rectMenuSection, rectCard);
 
 
+            // Begin scroll view and group
+            Widgets.BeginScrollView(KrozzyUtilities.RectAddition(rectMenuSection, rectCard), ref v2FoodsScrollPosition, KrozzyUtilities.RectAddition(rectView, rectCard));
+            GUI.BeginGroup(rectGroup);
 
+            // Create list of items from array
+            float floYPos = 0f;
+            for (int i = 0; i < esiStartingItems.Length; i++)
+            {
+                // Build strings
+                string strNameLabel = esiStartingItems[i].thingDef.label;
+                string strQauntityLabel = esiStartingItems[i].thingAmountTotal.ToString();
+                string strCostLabel = String.Format("{0:0}", esiStartingItems[i].subtotal);
+                string strDescToolTip = string.Concat(esiStartingItems[i].thingDef.description, " price: ", esiStartingItems[i].price.ToString(), 
+                    ", itemAmount: ", esiStartingItems[i].itemAmount.ToString());
 
+                // Shape idividual item
+                Rect rectWholeItem = new Rect(0f, floYPos, rectView.width, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+                Rect rectNameLabel = new Rect(0f, floYPos, floColumnNameWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+                Rect rectQauntityLabel = new Rect(floColumnNameWidth, floYPos, floColumnQuantityWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+                Rect rectCostLabel = new Rect(floColumnNameWidth + floColumnQuantityWidth, floYPos, floColumnCostWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
 
+                // update y position for next label
+                floYPos += Text.CalcHeight(strNameLabel, floColumnNameWidth);
 
+                // Draw label based upon if it's currently selected
+                if (i == intCurSelectedToUnequip)
+                {
+                    // Using custom font if selected
+                    GUI.Label(rectNameLabel, strNameLabel, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Yellow));
+                    GUI.Label(rectQauntityLabel, strQauntityLabel, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Yellow));
+                    GUI.Label(rectCostLabel, strCostLabel, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Yellow));
 
+                    // Prime variable for unequip button
+                    esItemCurSelectedToUnequip = esiStartingItems[i];
+                    //intCurSelectedAmountToUnequip = esiStartingItems[i].amount;
+                    //intCurSelectedPriceToUnequip = ES.GetPrice(esiStartingItems[i]);
+                }
+                else
+                {
+                    // Using default font if not selected
+                    Widgets.Label(rectNameLabel, strNameLabel);
+                    Widgets.Label(rectQauntityLabel, strQauntityLabel);
+                    Widgets.Label(rectCostLabel, strCostLabel);
+                }
 
+                // Highlight is mouse is hovering over
+                if (Mouse.IsOver(rectWholeItem))
+                {
+                    KrozzyUtilities.Tooltip(KrozzyUtilities.RectAddition(rectScrollingTooltip, Find.WindowStack.currentlyDrawnWindow.windowRect), strDescToolTip);
+                    Widgets.DrawHighlight(rectWholeItem);
+                }
 
+                // Draw invisible button for item selecting
+                if (Widgets.ButtonInvisible(rectWholeItem, true))
+                {
+                    intCurSelectedToUnequip = i;
+                }
+            }
 
+            // End group and scroll view
+            GUI.EndGroup();
+            Widgets.EndScrollView();
+            Text.Font = GameFont.Small; // Ensure font size is back to default
+        }
 
-		private void DoGrid()
-		{
-			/*******************************************
-			* Grid for reference while designing cards *
-			*******************************************/
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .1f), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .2f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .2f), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .3f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .3f), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .4f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .4f), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .5f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .5f), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .6f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .6f), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .7f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .7f), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .8f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .8f), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .9f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .9f), Color.cyan, 2f);
+        private void DoEquipButton()
+        {
+            // Shape the button
+            Rect rectEqiupButton = new Rect(rectCard.width * .4f, rectCard.height * .1f, rectCard.width * .2f, rectCard.height * .1f);
 
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .05f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .05f), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .15f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .15f), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .25f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .25f), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .35f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .35f), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .45f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .45f), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .55f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .55f), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .65f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .65f), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .75f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .75f), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .85f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .85f), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x, rectCard.y + rectCard.height * .95f), new Vector2(rectCard.x + rectCard.width, rectCard.y + rectCard.height * .95f), Color.blue, 1f);
+            // Draw the button
+            if (Widgets.ButtonText(KrozzyUtilities.RectAddition(rectEqiupButton, rectCard), "Equip", true, true, true))
+            {
+                // Method to add the item to the starting items list
+                ES.EquipESItem(esItemCurSelectedToEquip);
+            }
+        }
 
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .05f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .05f, rectCard.y + rectCard.height), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .15f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .15f, rectCard.y + rectCard.height), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .25f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .25f, rectCard.y + rectCard.height), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .35f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .35f, rectCard.y + rectCard.height), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .45f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .45f, rectCard.y + rectCard.height), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .55f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .55f, rectCard.y + rectCard.height), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .65f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .65f, rectCard.y + rectCard.height), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .75f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .75f, rectCard.y + rectCard.height), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .85f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .85f, rectCard.y + rectCard.height), Color.blue, 1f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .95f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .95f, rectCard.y + rectCard.height), Color.blue, 1f);
+        private void DoUnequipButton()
+        {
+            ESItem[] esiStartingItems = ES.StartingItems.aStartingItems;
 
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .1f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .1f, rectCard.y + rectCard.height), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .2f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .2f, rectCard.y + rectCard.height), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .3f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .3f, rectCard.y + rectCard.height), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .4f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .4f, rectCard.y + rectCard.height), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .5f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .5f, rectCard.y + rectCard.height), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .6f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .6f, rectCard.y + rectCard.height), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .7f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .7f, rectCard.y + rectCard.height), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .8f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .8f, rectCard.y + rectCard.height), Color.cyan, 2f);
-			Widgets.DrawLine(new Vector2(rectCard.x + rectCard.width * .9f, rectCard.y + rectCard.height * .1f), new Vector2(rectCard.x + rectCard.width * .9f, rectCard.y + rectCard.height), Color.cyan, 2f);
+            // Shape the button
+            Rect rectEqiupButton = new Rect(rectCard.width * .4f, rectCard.height * .3f, rectCard.width * .2f, rectCard.height * .1f);
 
-		}
+            if (esiStartingItems.Any())
+            {
+                // Draw the button
+                if (Widgets.ButtonText(KrozzyUtilities.RectAddition(rectEqiupButton, rectCard), "Unequip", true, true, true))
+                {
+                    // Method to add the item to the starting items list
+                    ES.UnequipESItem(ref esItemCurSelectedToUnequip);
+                }
+            }
+            else
+            {
+                // Draw the button
+                Widgets.ButtonText(KrozzyUtilities.RectAddition(rectEqiupButton, rectCard), "Unequip", true, false, false);
+            }
+        }
+
+        private void DoTotalCostLabel()
+        {
+            // Calculate variables
+            Text.Font = GameFont.Medium;
+            string strTotalItemsPrice = String.Concat("Cost: ", String.Format("{0:0}", ES.floTotalItemsPrice));
+            Vector2 vecSize = Text.CalcSize(strTotalItemsPrice);
+            float floPosX = (rectCard.width - vecSize.x) - (rectCard.width * .05f);
+
+            // Shape the label
+            Rect rectTotalCostLabel = new Rect(floPosX, rectCard.height * 0f, vecSize.x, vecSize.y);
+
+            // Draw the label
+            Widgets.Label(KrozzyUtilities.RectAddition(rectTotalCostLabel, rectCard), strTotalItemsPrice);
+
+            Text.Font = GameFont.Small;
+        }
 
 		public string GetLabel()
 		{
@@ -506,7 +736,5 @@ namespace Prophesy.PreGame
 
 			return "GetLabel error.";
 		}
-
-
 	}
 }
