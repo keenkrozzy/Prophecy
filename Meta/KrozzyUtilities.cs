@@ -102,12 +102,16 @@ namespace Prophesy.Meta
 			return mousePositionOnUI;
 		}
 
-		public static GUIStyle BuildStyle(Fonts _font, Colors _color)
+		public static GUIStyle BuildStyle(Fonts _font, Colors _color, FontStyle _style = FontStyle.Normal)
 		{
-			GUIStyle style = new GUIStyle();
+			GUIStyle style = new GUIStyle() 
+			{
+				font = fontStyles[(int)_font]
+			};
 
-			style.font = fontStyles[(int)_font];
 			style.normal.textColor = colors[(int)_color];
+            style.wordWrap = true;
+			style.fontStyle = _style;
 
 			return style;
 		}

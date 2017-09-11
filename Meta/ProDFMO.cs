@@ -17,14 +17,14 @@ namespace Prophesy.Meta
         ***************************/
         private const float TitleHeight = 42f;
         private const float ButtonHeight = 35f;
-        public string text;
+        public string text = null;
         public string title;
         public string buttonAText;
         public Action buttonAAction;
         public bool buttonADestructive;
         public string buttonBText;
         public Action buttonBAction;
-        public float interactionDelay;
+        public float interactionDelay = 0f;
         private Vector2 scrollPosition = Vector2.zero;
         private float creationRealTime = -1f;
 
@@ -36,14 +36,14 @@ namespace Prophesy.Meta
         private const float MinimumColumnWidth = 70f;
         private const float FadeStartMouseDist = 5f;
         private const float FadeFinishMouseDist = 100f;
-        public bool givesColonistOrders;
+        public bool givesColonistOrders = false;
         public bool vanishIfMouseDistant = true;
         protected List<FloatMenuOption> options;
         //private string title;
         private Color baseColor = Color.white;
         //private Vector2 scrollPosition;
-        private readonly static Vector2 TitleOffset;
-        private readonly static Vector2 InitialPositionShift;
+        //private readonly static Vector2 TitleOffset;
+        //private readonly static Vector2 InitialPositionShift;
 
 
         //Dialog_MessageBox Properties

@@ -21,7 +21,7 @@ namespace Prophesy.ProGame
         private IntVec3 clusterCenter;
 
         [NoTranslate]
-        private List<string> terrainValidationDisallowed;
+        private List<string> terrainValidationDisallowed = null;
 
         private List<Rot4> possibleRotationsInt;
 
@@ -96,12 +96,11 @@ namespace Prophesy.ProGame
             {
                 return false;
             }
-            Rot4 rot;
-            if (!TryGetRandomValidRotation(loc, map, out rot))
-            {
-                return false;
-            }
-            if (terrainValidationRadius > 0f)
+			if (!TryGetRandomValidRotation(loc, map, out Rot4 rot))
+			{
+				return false;
+			}
+			if (terrainValidationRadius > 0f)
             {
                 foreach (IntVec3 current in GenRadial.RadialCellsAround(loc, terrainValidationRadius, true))
                 {
@@ -165,13 +164,12 @@ namespace Prophesy.ProGame
 
         protected override void ScatterAt(IntVec3 loc, Map map, int stackCount = 1)
         {
-            Rot4 rot;
-            if (!TryGetRandomValidRotation(loc, map, out rot))
-            {
-                Log.Warning("Could not find any valid rotation for " + thingDef);
-                return;
-            }
-            if (clearSpaceSize > 0)
+			if (!TryGetRandomValidRotation(loc, map, out Rot4 rot))
+			{
+				Log.Warning("Could not find any valid rotation for " + thingDef);
+				return;
+			}
+			if (clearSpaceSize > 0)
             {
                 using (IEnumerator<IntVec3> enumerator = GridShapeMaker.IrregularLump(loc, map, clearSpaceSize).GetEnumerator())
                 {
@@ -194,9 +192,8 @@ namespace Prophesy.ProGame
             {
                 thing.stackCount = stackCount;
                 ForbidUtility.SetForbidden(thing, true, false);
-                Thing thing2;
-                GenPlace.TryPlaceThing(thing, loc, map, ThingPlaceMode.Near, out thing2, null);
-                if (nearPlayerStart && thing2 != null && thing2.def.category == ThingCategory.Item && TutorSystem.TutorialMode)
+				GenPlace.TryPlaceThing(thing, loc, map, ThingPlaceMode.Near, out Thing thing2, null);
+				if (nearPlayerStart && thing2 != null && thing2.def.category == ThingCategory.Item && TutorSystem.TutorialMode)
                 {
                     Find.TutorialState.AddStartingItem(thing2);
                     return;
@@ -223,9 +220,8 @@ namespace Prophesy.ProGame
                 leftInCluster--;
                 result = CellFinder.RandomClosewalkCellNear(clusterCenter, map, radius, delegate (IntVec3 x)
                 {
-                    Rot4 rot;
-                    return TryGetRandomValidRotation(x, map, out rot);
-                });
+					return TryGetRandomValidRotation(x, map, out Rot4 rot);
+				});
                 return result.IsValid;
             }
             return base.TryFindScatterCell(map, out result);

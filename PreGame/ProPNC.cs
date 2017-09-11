@@ -23,7 +23,7 @@ namespace Prophesy.PreGame
 
         private const float RightRectLeftPadding = 5f;
 
-        private Pawn curPawn;
+        //private Pawn curPawn;
 
         //private readonly static Vector2 PawnPortraitSize;
 
@@ -44,7 +44,7 @@ namespace Prophesy.PreGame
 
 		private int intCardNum = 0;
 
-		private int intPoints = 1000;
+		private float floPoints = NewGameRules.floStartingPoints;
 
 		private Rect rectCardLabelAdjust = new Rect();
 
@@ -331,10 +331,12 @@ namespace Prophesy.PreGame
 			templstPNC_CardsInOrder.Clear();
 		}
 
+
+
 		private void DoPoints(Rect _rect)
 		{
 			// Make string
-			string strLabel = "Points: " + intPoints.ToString();
+			string strLabel = "Item Points: " + String.Format("{0:0}", NewGameRules.floCurItemPoints);
 
 			// Shape label
 			Rect rectLabel = new Rect(_rect.x, _rect.y, Text.CalcSize(strLabel).x, Text.CalcSize(strLabel).y);
@@ -406,6 +408,12 @@ namespace Prophesy.PreGame
 		protected override bool CanDoNext()
 		{
 			bool flag;
+			if(NewGameRules.floCurItemPoints < 0f)
+			{
+				Messages.Message("You do not have enough points to continue.", MessageSound.RejectInput);
+				flag = false;
+				return flag;
+			}
 			if (!base.CanDoNext())
 			{
 				return false;
@@ -430,7 +438,7 @@ namespace Prophesy.PreGame
 			{
 				((IDisposable)(object)enumerator).Dispose();
 			}
-			return flag;
+			//return flag;
 		}
 
 		//private void RandomizeCurPawn()

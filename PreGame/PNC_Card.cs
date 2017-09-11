@@ -1,15 +1,12 @@
-﻿using System;
+﻿using Prophesy.Meta;
+using Prophesy.Stock;
+using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Harmony;
-using System.Reflection;
-using RimWorld;
-using Verse;
-using UnityEngine;
-using Prophesy.Meta;
 using System.Text.RegularExpressions;
-using Prophesy.Stock;
-using Prophesy.ProGame;
+using UnityEngine;
+using Verse;
 
 namespace Prophesy.PreGame
 {
@@ -24,19 +21,20 @@ namespace Prophesy.PreGame
 		private Regex validNameRegex = new Regex("^[a-zA-Z0-9 '\\-]*$");
 		private Vector2 v2BackgroundsScrollPosition = Vector2.zero;
 		private ColorInt cintBorder = new ColorInt(135, 135, 135);
-		private int intCurTab = 0;
+		//private int intCurTab = 0;
 		private Texture2D[] atexTabs = new Texture2D[6] { ProTBin.texFoodsTab, ProTBin.texApparelTab, ProTBin.texWeaponsTab, ProTBin.texDrugsTab, ProTBin.texResourcesTab, ProTBin.texItemsTab };
 		private bool[] aboolCurTab = { true, false, false, false, false, false };
 		private string[] astrTabTooltip = { "Foods", "Apparel", "Weapons", "Drugs", "Resources", "Items" };
-		private Vector2 v2FoodsScrollPosition = Vector2.zero;
+		private Vector2 v2FoodsScrollPosition1 = Vector2.zero;
+		private Vector2 v2FoodsScrollPosition2 = Vector2.zero;
 		private int intCurSelectedToEquip = 0;
         private int intCurSelectedToUnequip = 0;
         private ESItem esItemCurSelectedToEquip = null;
-        private int intCurSelectedAmountToEquip = 0;
-        private float floCurSelectedPriceToEquip = 0f;
+        //private int intCurSelectedAmountToEquip = 0;
+        //private float floCurSelectedPriceToEquip = 0f;
         private ESItem esItemCurSelectedToUnequip = null;
-        private int intCurSelectedAmountToUnequip = 0;
-        private int intCurSelectedPriceToUnequip = 0;
+        //private int intCurSelectedAmountToUnequip = 0;
+        //private int intCurSelectedPriceToUnequip = 0;
         private ProEquipmentShop ES;
         
 
@@ -455,7 +453,7 @@ namespace Prophesy.PreGame
 						break;
 
                         case "Apparel":
-                        ItemSheet(rectMenuSection, ES.Foods.aFoods, GameFont.Small);
+                        ItemSheet(rectMenuSection, ES.Apparel.aApparel, GameFont.Small);
                         break;
 
                         case "Weapons":
@@ -480,45 +478,73 @@ namespace Prophesy.PreGame
 
 		private void ItemSheet(Rect _rectOut, ESItem[] _aItems, GameFont _fontSize)
 		{
-            // Shape item sheet
-            float floViewWidth = _rectOut.width - 16f; // Scrollbar has 16f hard number           
-            float floColumnNameWidth = floViewWidth * .5f;
-            float floColumnQuantityWidth = floViewWidth * .25f;
-            float floColumnCostWidth = floViewWidth * .25f;
+			// Shape item sheet
+			float floViewWidth = _rectOut.width - 16f; // Scrollbar has 16f hard number
+			float floColumnTexWidth = floViewWidth * .1f;
+			float floColumnNameWidth = floViewWidth * .6f;
+            float floColumnQuantityWidth = floViewWidth * .12f;
+            float floColumnCostWidth = floViewWidth * .18f;
             Text.Font = _fontSize;
-            float TotalHeight = 0f;
-            foreach (ESItem item in _aItems)
+			float TotalHeight = 0f;
+
+			// Create strings for headers
+			string strItemNameHeader = "Item";
+			string strItemAmountHeader = "#";
+			string strItemPriceHeader = "Cost";
+
+			// Calculate header heights
+			float floHeaderHeight = Text.CalcHeight(strItemNameHeader, floColumnNameWidth);
+
+			// Shape the headers
+			Rect rectItemNameHeader = new Rect(_rectOut.x + floColumnTexWidth, _rectOut.y, floColumnNameWidth, floHeaderHeight);
+			Rect rectItemAmountHeader = new Rect(_rectOut.x + floColumnTexWidth + floColumnNameWidth, _rectOut.y, floColumnQuantityWidth, floHeaderHeight);
+			Rect rectItemPriceHeader = new Rect(_rectOut.x + floColumnTexWidth + floColumnNameWidth + floColumnQuantityWidth, _rectOut.y, floColumnCostWidth, floHeaderHeight);
+
+			// Draw the headers
+			GUI.Label(KrozzyUtilities.RectAddition(rectItemNameHeader, rectCard), strItemNameHeader, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Bold));
+			GUI.Label(KrozzyUtilities.RectAddition(rectItemAmountHeader, rectCard), strItemAmountHeader, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Bold));
+			GUI.Label(KrozzyUtilities.RectAddition(rectItemPriceHeader, rectCard), strItemPriceHeader, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Bold));
+
+			// Reshape the _rectOut
+			_rectOut = new Rect(_rectOut.x, _rectOut.y + floHeaderHeight, _rectOut.width, _rectOut.height - floHeaderHeight);
+
+			// Calculate total item list height
+			foreach (ESItem item in _aItems)
             {
-                TotalHeight += Text.CalcHeight(item.thingDef.label, floColumnNameWidth);
+                TotalHeight += Text.CalcHeight(item.strNameLabel, floColumnNameWidth);
             }
+
+			// Calculate rectView based on if the scroll bar will need to be shown
             Rect rectView = new Rect();
             if (TotalHeight > _rectOut.height) {rectView = new Rect(_rectOut.x, _rectOut.y, floViewWidth, TotalHeight);}
             else {rectView = new Rect(_rectOut.x, _rectOut.y, _rectOut.width, TotalHeight);}
             
+			// Calculate rects for GUI group and tooltip
 			Rect rectGroup = KrozzyUtilities.RectAddition(rectView, rectCard);
 			Rect rectScrollingTooltip = KrozzyUtilities.RectAddition(_rectOut, rectCard);
             
             // Begin scroll view and group
-            Widgets.BeginScrollView(KrozzyUtilities.RectAddition(_rectOut, rectCard), ref v2FoodsScrollPosition, KrozzyUtilities.RectAddition(rectView, rectCard));
+            Widgets.BeginScrollView(KrozzyUtilities.RectAddition(_rectOut, rectCard), ref v2FoodsScrollPosition1, KrozzyUtilities.RectAddition(rectView, rectCard));
 			GUI.BeginGroup(rectGroup);
 
             // Create list of items from array
             float floYPos = 0f;
-			for (int i = 0; i < _aItems.Length - 1; i++)
+			for (int i = 0; i < _aItems.Length; i++)
 			{
-                string strNameLabel = _aItems[i].thingDef.label;
+                string strNameLabel = _aItems[i].strNameLabel;
                 string strQauntityLabel = _aItems[i].thingAmount.ToString();
                 string strCostLabel = String.Format( "{0:0}", ES.GetPrice(_aItems[i]));
                 string strDescToolTip = _aItems[i].thingDef.description;
 
                 // Shape idividual item
                 Rect rectWholeItem = new Rect(0f, floYPos, rectView.width, Text.CalcHeight(strNameLabel, floColumnNameWidth));
-                Rect rectNameLabel = new Rect(0f, floYPos, floColumnNameWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
-                Rect rectQauntityLabel = new Rect(floColumnNameWidth, floYPos, floColumnQuantityWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
-                Rect rectCostLabel = new Rect(floColumnNameWidth + floColumnQuantityWidth, floYPos, floColumnCostWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+				Rect rectMiniTex = new Rect(0f, floYPos, floColumnTexWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+				Rect rectNameLabel = new Rect(floColumnTexWidth, floYPos, floColumnNameWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+                Rect rectQauntityLabel = new Rect(floColumnTexWidth + floColumnNameWidth, floYPos, floColumnQuantityWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+                Rect rectCostLabel = new Rect(floColumnTexWidth + floColumnNameWidth + floColumnQuantityWidth, floYPos, floColumnCostWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
 
-                // update y position for next label
-                floYPos += Text.CalcHeight(strNameLabel, floColumnNameWidth);
+				// update y position for next label
+				floYPos += Text.CalcHeight(strNameLabel, floColumnNameWidth);
 
                 // Draw label based upon if it's currently selected
                 if (i == intCurSelectedToEquip)
@@ -526,18 +552,18 @@ namespace Prophesy.PreGame
 					GUI.Label(rectNameLabel, strNameLabel, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Yellow));
                     GUI.Label(rectQauntityLabel, strQauntityLabel, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Yellow));
                     GUI.Label(rectCostLabel, strCostLabel, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Yellow));
+					_aItems[i].DrawIcon(rectMiniTex);
 
-                    // Prime variable for equip button
-                    esItemCurSelectedToEquip = _aItems[i];
-                    //intCurSelectedAmountToEquip = _aItems[i].amount;
-                    //floCurSelectedPriceToEquip = ES.GetPrice(_aItems[i]);
+					// Prime variable for equip button
+					esItemCurSelectedToEquip = _aItems[i];
                 }
 				else
 				{
 					Widgets.Label(rectNameLabel, strNameLabel);
                     Widgets.Label(rectQauntityLabel, strQauntityLabel);
                     Widgets.Label(rectCostLabel, strCostLabel);
-                }
+					_aItems[i].DrawIcon(rectMiniTex);
+				}
 
                 // Highlight is mouse is hovering over
 				if (Mouse.IsOver(rectWholeItem))
@@ -567,46 +593,69 @@ namespace Prophesy.PreGame
 
             // Shape the menu section
             Rect rectMenuSection = new Rect(rectCard.width * .625f, rectCard.height * .1f, rectCard.width * .3f, floMenuHeight);
+			Rect rectOut = KrozzyUtilities.RectAddition(rectMenuSection, rectCard);
 
-            // Draw the menu section
-            GUI.DrawTexture(KrozzyUtilities.RectAddition(rectMenuSection, rectCard), ProTBin.texVellum, ScaleMode.ScaleAndCrop);
+			// Draw the menu section
+			GUI.DrawTexture(rectOut, ProTBin.texVellum, ScaleMode.ScaleAndCrop);
             GUI.color = cintBorder.ToColor;
-            Widgets.DrawBox(KrozzyUtilities.RectAddition(rectMenuSection, rectCard), 1);
+            Widgets.DrawBox(rectOut, 1);
             GUI.color = Color.white; // set GUI color back to default
 
             // Shape item sheet
-            float floViewWidth = rectMenuSection.width - 16f; // Scrollbar has 16f hard number           
-            float floColumnNameWidth = floViewWidth * .5f;
-            float floColumnQuantityWidth = floViewWidth * .25f;
-            float floColumnCostWidth = floViewWidth * .25f;
+            float floViewWidth = rectMenuSection.width - 16f; // Scrollbar has 16f hard number
+			float floColumnTexWidth = floViewWidth * .1f;
+			float floColumnNameWidth = floViewWidth * .6f;
+            float floColumnQuantityWidth = floViewWidth * .12f;
+            float floColumnCostWidth = floViewWidth * .18f;
             Text.Font = GameFont.Small; // Make sure the font is default for size calculation
             float TotalHeight = 0f;
 
-            // Calculate total height of items
-            foreach (ESItem item in esiStartingItems)
+			// Create strings for headers
+			string strItemNameHeader = "Item";
+			string strItemAmountHeader = "#";
+			string strItemPriceHeader = "Cost";
+
+			// Calculate header heights
+			float floHeaderHeight = Text.CalcHeight(strItemNameHeader, floColumnNameWidth);
+
+			// Shape the headers
+			Rect rectItemNameHeader = new Rect(rectOut.x + floColumnTexWidth, rectOut.y, floColumnNameWidth, floHeaderHeight);
+			Rect rectItemAmountHeader = new Rect(rectOut.x + floColumnTexWidth + floColumnNameWidth, rectOut.y, floColumnQuantityWidth, floHeaderHeight);
+			Rect rectItemPriceHeader = new Rect(rectOut.x + floColumnTexWidth + floColumnNameWidth + floColumnQuantityWidth, rectOut.y, floColumnCostWidth, floHeaderHeight);
+
+			// Draw the headers
+			GUI.Label(rectItemNameHeader, strItemNameHeader, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Bold));
+			GUI.Label(rectItemAmountHeader, strItemAmountHeader, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Bold));
+			GUI.Label(rectItemPriceHeader, strItemPriceHeader, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Bold));
+
+			// Reshape the rectOut
+			rectOut = new Rect(rectOut.x, rectOut.y + floHeaderHeight, rectOut.width, rectOut.height - floHeaderHeight);
+
+			// Calculate total height of items
+			foreach (ESItem item in esiStartingItems)
             {
-                TotalHeight += Text.CalcHeight(item.thingDef.label, floColumnNameWidth);
+                TotalHeight += Text.CalcHeight(item.strNameLabel, floColumnNameWidth);
             }
 
             // If the total height of items in more than the menu section height, make scroll view fit inside the menu
             // Else make the scroll view wide enough so the highlighted item is not clipped
             Rect rectView = new Rect();
-            if (TotalHeight > rectMenuSection.height)
+            if (TotalHeight > rectOut.height)
             {
-                rectView = new Rect(rectMenuSection.x, rectMenuSection.y, floViewWidth, TotalHeight);
+                rectView = new Rect(rectOut.x, rectOut.y, floViewWidth, TotalHeight);
             }
             else
             {
-                rectView = new Rect(rectMenuSection.x, rectMenuSection.y, rectMenuSection.width, TotalHeight);
+                rectView = new Rect(rectOut.x, rectOut.y, rectOut.width, TotalHeight);
             }
 
             // Shape the group and shape the tooltip so that it does not scroll inside the scroll view
             Rect rectGroup = KrozzyUtilities.RectAddition(rectView, rectCard);
-            Rect rectScrollingTooltip = KrozzyUtilities.RectAddition(rectMenuSection, rectCard);
+            Rect rectScrollingTooltip = KrozzyUtilities.RectAddition(rectOut, rectCard);
 
 
             // Begin scroll view and group
-            Widgets.BeginScrollView(KrozzyUtilities.RectAddition(rectMenuSection, rectCard), ref v2FoodsScrollPosition, KrozzyUtilities.RectAddition(rectView, rectCard));
+            Widgets.BeginScrollView(rectOut, ref v2FoodsScrollPosition2, KrozzyUtilities.RectAddition(rectView, rectCard));
             GUI.BeginGroup(rectGroup);
 
             // Create list of items from array
@@ -614,26 +663,28 @@ namespace Prophesy.PreGame
             for (int i = 0; i < esiStartingItems.Length; i++)
             {
                 // Build strings
-                string strNameLabel = esiStartingItems[i].thingDef.label;
+                string strNameLabel = esiStartingItems[i].strNameLabel;
                 string strQauntityLabel = esiStartingItems[i].thingAmountTotal.ToString();
                 string strCostLabel = String.Format("{0:0}", esiStartingItems[i].subtotal);
                 string strDescToolTip = string.Concat(esiStartingItems[i].thingDef.description, " price: ", esiStartingItems[i].price.ToString(), 
                     ", itemAmount: ", esiStartingItems[i].itemAmount.ToString());
 
                 // Shape idividual item
-                Rect rectWholeItem = new Rect(0f, floYPos, rectView.width, Text.CalcHeight(strNameLabel, floColumnNameWidth));
-                Rect rectNameLabel = new Rect(0f, floYPos, floColumnNameWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
-                Rect rectQauntityLabel = new Rect(floColumnNameWidth, floYPos, floColumnQuantityWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
-                Rect rectCostLabel = new Rect(floColumnNameWidth + floColumnQuantityWidth, floYPos, floColumnCostWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+				Rect rectWholeItem = new Rect(0f, floYPos, rectView.width, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+				Rect rectMiniTex = new Rect(0f, floYPos, floColumnTexWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+				Rect rectNameLabel = new Rect(floColumnTexWidth, floYPos, floColumnNameWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+				Rect rectQauntityLabel = new Rect(floColumnTexWidth + floColumnNameWidth, floYPos, floColumnQuantityWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
+				Rect rectCostLabel = new Rect(floColumnTexWidth + floColumnNameWidth + floColumnQuantityWidth, floYPos, floColumnCostWidth, Text.CalcHeight(strNameLabel, floColumnNameWidth));
 
-                // update y position for next label
-                floYPos += Text.CalcHeight(strNameLabel, floColumnNameWidth);
+				// update y position for next label
+				floYPos += Text.CalcHeight(strNameLabel, floColumnNameWidth);
 
                 // Draw label based upon if it's currently selected
                 if (i == intCurSelectedToUnequip)
                 {
-                    // Using custom font if selected
-                    GUI.Label(rectNameLabel, strNameLabel, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Yellow));
+					// Using custom font if selected
+					esiStartingItems[i].DrawIcon(rectMiniTex);
+					GUI.Label(rectNameLabel, strNameLabel, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Yellow));
                     GUI.Label(rectQauntityLabel, strQauntityLabel, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Yellow));
                     GUI.Label(rectCostLabel, strCostLabel, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Yellow));
 
@@ -644,8 +695,9 @@ namespace Prophesy.PreGame
                 }
                 else
                 {
-                    // Using default font if not selected
-                    Widgets.Label(rectNameLabel, strNameLabel);
+					// Using default font if not selected
+					esiStartingItems[i].DrawIcon(rectMiniTex);
+					Widgets.Label(rectNameLabel, strNameLabel);
                     Widgets.Label(rectQauntityLabel, strQauntityLabel);
                     Widgets.Label(rectCostLabel, strCostLabel);
                 }
@@ -678,8 +730,13 @@ namespace Prophesy.PreGame
             // Draw the button
             if (Widgets.ButtonText(KrozzyUtilities.RectAddition(rectEqiupButton, rectCard), "Equip", true, true, true))
             {
-                // Method to add the item to the starting items list
-                ES.EquipESItem(esItemCurSelectedToEquip);
+				// Method to add the item to the starting items list
+				ES.EquipESItem(esItemCurSelectedToEquip);
+
+				if(esItemCurSelectedToUnequip == null)
+				{
+					esItemCurSelectedToUnequip = ES.StartingItems.aStartingItems[intCurSelectedToUnequip];
+				}
             }
         }
 
@@ -690,12 +747,12 @@ namespace Prophesy.PreGame
             // Shape the button
             Rect rectEqiupButton = new Rect(rectCard.width * .4f, rectCard.height * .3f, rectCard.width * .2f, rectCard.height * .1f);
 
-            if (esiStartingItems.Any())
+            if (esiStartingItems.Any(x => x.strNameLabel == esItemCurSelectedToUnequip.strNameLabel))
             {
                 // Draw the button
                 if (Widgets.ButtonText(KrozzyUtilities.RectAddition(rectEqiupButton, rectCard), "Unequip", true, true, true))
                 {
-                    // Method to add the item to the starting items list
+                    // Method to remove the item to the starting items list
                     ES.UnequipESItem(ref esItemCurSelectedToUnequip);
                 }
             }
@@ -721,7 +778,10 @@ namespace Prophesy.PreGame
             Widgets.Label(KrozzyUtilities.RectAddition(rectTotalCostLabel, rectCard), strTotalItemsPrice);
 
             Text.Font = GameFont.Small;
-        }
+
+			NewGameRules.floCurItemPoints = NewGameRules.floStartingPoints - ES.floTotalItemsPrice;
+
+		}
 
 		public string GetLabel()
 		{

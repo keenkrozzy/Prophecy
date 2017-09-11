@@ -56,6 +56,7 @@
     <Compile Include="PreGame\ESApparel.cs" />
     <Compile Include="PreGame\ESFoods.cs" />
     <Compile Include="PreGame\ESStartingItems.cs" />
+    <Compile Include="PreGame\NewGameRules.cs" />
     <Compile Include="PreGame\ProEquipmentShop.cs" />
     <Compile Include="Meta\ProphecySettings.cs" />
     <Compile Include="ProGame\ProGenStep_ScatterThings.cs" />

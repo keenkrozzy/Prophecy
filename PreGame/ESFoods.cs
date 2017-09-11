@@ -4,29 +4,74 @@ using System.Linq;
 using System.Text;
 using Verse;
 using RimWorld;
+using RimWorld.Planet;
+using UnityEngine;
 
 namespace Prophesy.PreGame
 {
     public class ESFoods
     {
         public ESItem[] aFoods = new ESItem[0];
-        public int length;
+		BiomeDef biome = new BiomeDef();
 
-        public ESFoods()
-        {
-            aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican",10,10f), new ESItem("MealSimple",1,9f), new ESItem("MealFine",1,11f), new ESItem("Kibble",10,5f), new ESItem("Hay",10,4f),
-            new ESItem("RawBerries",1,5f), new ESItem("RawPotatoes",1,5f), new ESItem("RawCorn",1,5f), new ESItem("RawRice",1,5f), new ESItem("RawAgave",1,5f), new ESItem("InsectJelly",1,5f),
-            new ESItem("Milk",10,5f), new ESItem("EggChickenUnfertilized",1,3f)}).ToArray();
+		public ESFoods(BiomeDef _biome)
+		{
+			aFoods = aFoods.Concat(new ESItem[] { new ESItem("MealSimple",1,9f), new ESItem("MealFine",1,11f)}).ToArray();
 
-            length = aFoods.Length;
-
-            Log.Message("ctor fired for ESFoods");
-        }
+			biome = _biome;
+			switch (biome.defName)
+			{
+				case "AridShrubland":
+					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 10, 10f), new ESItem("Kibble", 10, 5f), new ESItem("Hay", 10, 4f),
+					new ESItem("RawBerries",1,5f), new ESItem("RawPotatoes",1,5f), new ESItem("RawCorn",1,5f), new ESItem("RawRice",1,5f),
+					new ESItem("Milk",10,5f), new ESItem("EggChickenUnfertilized",1,3f), new ESItem("InsectJelly",1,5f)}).ToArray();
+					break;
+				case "Desert":
+					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 10, 12f), new ESItem("Kibble", 10, 6f), new ESItem("Hay", 10, 5f),
+					new ESItem("RawBerries",1,6f), new ESItem("RawPotatoes",1,6f), new ESItem("RawCorn",1,6f), new ESItem("RawRice",1,6f), new ESItem("RawAgave",1,5f),
+					new ESItem("Milk",10,6f), new ESItem("EggChickenUnfertilized",1,4f), new ESItem("InsectJelly",1,5f)}).ToArray();
+					break;
+				case "ExtremeDesert":
+					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 10, 12f), new ESItem("Kibble", 12, 5f), new ESItem("RawAgave", 1, 5f), new ESItem("InsectJelly", 1, 5f) }).ToArray();
+					break;
+				case "TemperateForest":
+					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 10, 10f), new ESItem("Kibble", 10, 5f), new ESItem("Hay", 10, 4f),
+					new ESItem("RawBerries",1,5f), new ESItem("RawPotatoes",1,5f), new ESItem("RawCorn",1,5f), new ESItem("RawRice",1,5f),
+					new ESItem("Milk",10,5f), new ESItem("EggChickenUnfertilized",1,3f), new ESItem("InsectJelly",1,5f)}).ToArray();
+					break;
+				case "TropicalRainforest":
+					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 10, 10f), new ESItem("Kibble", 10, 5f), new ESItem("Hay", 10, 4f),
+					new ESItem("RawBerries",1,5f), new ESItem("RawPotatoes",1,5f), new ESItem("RawCorn",1,5f), new ESItem("RawRice",1,5f),
+					new ESItem("Milk",10,5f), new ESItem("EggChickenUnfertilized",1,3f), new ESItem("InsectJelly",1,5f)}).ToArray();
+					break;
+				case "BorealForest":
+					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 10, 10f), new ESItem("Kibble", 10, 5f), new ESItem("Hay", 10, 4f),
+					new ESItem("RawBerries",1,5f), new ESItem("RawPotatoes",1,5f), new ESItem("RawCorn",1,5f), new ESItem("RawRice",1,5f),
+					new ESItem("Milk",10,5f), new ESItem("EggChickenUnfertilized",1,3f), new ESItem("InsectJelly",1,5f)}).ToArray();
+					break;
+				case "Tundra":
+					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 12, 10f), new ESItem("Kibble", 12, 5f), new ESItem("Hay", 10, 5f),
+					new ESItem("RawBerries",1,6f), new ESItem("RawPotatoes",1,6f), new ESItem("RawCorn",1,6f),
+					new ESItem("Milk",10,6f), new ESItem("EggChickenUnfertilized",1,4f), new ESItem("InsectJelly",1,5f)}).ToArray();
+					break;
+				case "IceSheet":
+					aFoods = aFoods.Concat(new ESItem[] { }).ToArray();
+					break;
+				case "SeaIce":
+					aFoods = aFoods.Concat(new ESItem[] { }).ToArray();
+					break;
+			}
+		}
     }
 
     public class ESItem
     {
         public ThingDef thingDef;
+        public ThingDef stuff = null;
+		public Thing thing = null;
+		//public Texture2D icon = null;
+		//public Color iconColor = Color.white;
+        public string strNameLabel;
         public int thingAmount;
         public int thingAmountTotal;
         public int itemAmount;
@@ -34,7 +79,7 @@ namespace Prophesy.PreGame
         public float basePrice;
         public float subtotal;
 
-        public ESItem(string _thingDef, int _thingAmount, float _basePrice)
+        public ESItem(string _thingDef, int _thingAmount, float _basePrice, string _stuff = null)
         {
             try
             {
@@ -42,7 +87,34 @@ namespace Prophesy.PreGame
             }
             catch
             {
-                Log.Message(string.Concat("ESItem was NOT able to assign ThingDef named: ", _thingDef, "."));
+                Log.Message(string.Concat("ESItem was NOT able to assign ThingDef named: ", _thingDef, " to thingDef."));
+            }
+
+            if (_stuff != null)
+            {
+                try
+                {
+                    stuff = ThingDef.Named(_stuff);
+                    strNameLabel = "ThingMadeOfStuffLabel".Translate(new object[]{ stuff.LabelAsStuff, thingDef.label });
+                    thing = ThingMaker.MakeThing(thingDef, stuff);
+					//mini = MinifyUtility.MakeMinified(thing);
+                }
+                catch
+                {
+                    Log.Message(string.Concat("ESItem was NOT able to assign ThingDef named: ", _thingDef, " to stuff."));
+                }
+            }
+            else
+            {
+                try
+                {
+                    strNameLabel = thingDef.label;
+					thing = ThingMaker.MakeThing(thingDef);
+				}
+				catch
+                {
+
+                }
             }
 
             itemAmount = 1;
@@ -67,5 +139,21 @@ namespace Prophesy.PreGame
             itemAmount -= _esi.itemAmount;
             subtotal -= _esi.price;
         }
+
+		public void DrawIcon(Rect _rect)
+		{
+			GUI.color = thing.DrawColor;
+			Texture icon;
+			if (!thing.def.uiIconPath.NullOrEmpty())
+			{
+				icon = thing.def.uiIcon;
+			}
+			else
+			{
+				icon = thing.Graphic.ExtractInnerGraphicFor(thing).MatSingle.mainTexture;
+			}
+			GUI.DrawTexture(_rect, icon, ScaleMode.ScaleToFit);
+			GUI.color = Color.white;
+		}
     }
 }

@@ -1,176 +1,5 @@
 ﻿Generation of new starting pawns happens at: StartingPawnUtility.NewGeneratedStartingPawn (line 62)
 
-public static Pawn NewGeneratedStartingPawn()
-		{
-			PawnGenerationRequest request = new PawnGenerationRequest(Faction.OfPlayer.def.basicMemberKind, Faction.OfPlayer, PawnGenerationContext.PlayerStarter, -1, true, false, false, false, true, false, 26f, false, true, true, false, false, null, null, null, null, null, null);
-			Pawn pawn = null;
-			try
-			{
-				pawn = PawnGenerator.GeneratePawn(request);
-			}
-			catch (Exception arg)
-			{
-				Log.Error("There was an exception thrown by the PawnGenerator during generating a starting pawn. Trying one more time...\nException: " + arg);
-				pawn = PawnGenerator.GeneratePawn(request);
-			}
-			pawn.relations.everSeenByPlayer = true;
-			PawnComponentsUtility.AddComponentsForSpawn(pawn);
-			return pawn;
-		}
-
-
-
-
-
-
-
-REFERENCE FOR CHARACTER CARDS
-Text.Font = GameFont.Medium;
-Widgets.Label(new Rect(0f, 0f, 200f, 30f), "Backstory".Translate());
-num += 30f;
-Text.Font = GameFont.Small;
-	using (IEnumerator enumerator = Enum.GetValues(typeof(BackstorySlot)).GetEnumerator())
-	{
-		while (enumerator.MoveNext())
-		{
-			BackstorySlot backstorySlot = (BackstorySlot)((byte)enumerator.Current);
-			Backstory backstory = pawn.story.GetBackstory(backstorySlot);
-			if (backstory != null)
-			{
-				Rect rect9 = new Rect(0f, num, position.width, 24f);
-				if (Mouse.IsOver(rect9))
-				{
-					Widgets.DrawHighlight(rect9);
-				}
-				TooltipHandler.TipRegion(rect9, backstory.FullDescriptionFor(pawn));
-				Text.Anchor = TextAnchor.MiddleLeft;
-				string str = (backstorySlot != BackstorySlot.Adulthood) ? "Childhood".Translate() : "Adulthood".Translate();
-				Widgets.Label(rect9, str + ":");
-				Text.Anchor = TextAnchor.UpperLeft;
-				Rect rect10 = new Rect(rect9);
-				rect10.x += 90f;
-				rect10.width -= 90f;
-				string title = backstory.Title;
-				Widgets.Label(rect10, title);
-				num += rect9.height + 2f;
-			}
-		}
-	}
-	num += 25f;
-	Text.Font = GameFont.Medium;
-	Widgets.Label(new Rect(0f, num, 200f, 30f), "IncapableOf".Translate());
-	num += 30f;
-	Text.Font = GameFont.Small;
-	StringBuilder stringBuilder = new StringBuilder();
-	WorkTags combinedDisabledWorkTags = pawn.story.CombinedDisabledWorkTags;
-	if (combinedDisabledWorkTags == WorkTags.None)
-	{
-		stringBuilder.Append("(" + "NoneLower".Translate() + "), ");
-	}
-	else
-	{
-		List<WorkTags> list = CharacterCardUtility.WorkTagsFrom(combinedDisabledWorkTags).ToList<WorkTags>();
-		bool flag2 = true;
-		foreach (WorkTags current in list)
-		{
-			if (!flag2)
-			{
-				stringBuilder.Append(current.LabelTranslated().ToLower());
-			}
-			else
-			{
-				stringBuilder.Append(current.LabelTranslated());
-			}
-			stringBuilder.Append(", ");
-			flag2 = false;
-		}
-	}
-	string text = stringBuilder.ToString();
-	text = text.Substring(0, text.Length - 2);
-	Rect rect11 = new Rect(0f, num, position.width, 999f);
-	Widgets.Label(rect11, text);
-	num += 100f;
-	Text.Font = GameFont.Medium;
-	Widgets.Label(new Rect(0f, num, 200f, 30f), "Traits".Translate());
-	num += 30f;
-	Text.Font = GameFont.Small;
-	for (int i = 0; i < pawn.story.traits.allTraits.Count; i++)
-	{
-		Trait trait = pawn.story.traits.allTraits[i];
-		Rect rect12 = new Rect(0f, num, position.width, 24f);
-		if (Mouse.IsOver(rect12))
-		{
-			Widgets.DrawHighlight(rect12);
-		}
-		Widgets.Label(rect12, trait.LabelCap);
-		num += rect12.height + 2f;
-		Trait trLocal = trait;
-		TipSignal tip = new TipSignal(() => trLocal.TipString(pawn), (int)num * 37);
-		TooltipHandler.TipRegion(rect12, tip);
-	}
-	GUI.EndGroup();
-	GUI.BeginGroup(position2);
-	Text.Font = GameFont.Medium;
-	Widgets.Label(new Rect(0f, 0f, 200f, 30f), "Skills".Translate());
-	SkillUI.SkillDrawMode mode;
-	if (Current.ProgramState == ProgramState.Playing)
-	{
-		mode = SkillUI.SkillDrawMode.Gameplay;
-	}
-	else
-	{
-		mode = SkillUI.SkillDrawMode.Menu;
-	}
-	SkillUI.DrawSkillsOf(pawn, new Vector2(0f, 35f), mode);
-	GUI.EndGroup();
-	GUI.EndGroup();
-
-
-
-
-
-
-
-	public static List<DebugMenuOption> TryPlaceOptionsForStackCount(int stackCount, bool direct)
-		{
-			List<DebugMenuOption> list = new List<DebugMenuOption>();
-			IEnumerable<ThingDef> enumerable = from def in DefDatabase<ThingDef>.AllDefs
-			where DebugThingPlaceHelper.IsDebugSpawnable(def) && def.stackLimit >= stackCount
-			select def;
-			foreach (ThingDef current in enumerable)
-			{
-				ThingDef localDef = current;
-				list.Add(new DebugMenuOption(localDef.LabelCap, DebugMenuOptionMode.Tool, delegate
-				{
-					DebugThingPlaceHelper.DebugSpawn(localDef, UI.MouseCell(), stackCount, direct);
-				}));
-			}
-			if (stackCount == 1)
-			{
-				foreach (ThingDef current2 in from def in DefDatabase<ThingDef>.AllDefs
-				where def.Minifiable
-				select def)
-				{
-					ThingDef localDef = current2;
-					list.Add(new DebugMenuOption(localDef.LabelCap + " (minified)", DebugMenuOptionMode.Tool, delegate
-					{
-						DebugThingPlaceHelper.DebugSpawn(localDef, UI.MouseCell(), stackCount, direct);
-					}));
-				}
-			}
-			return list;
-		}
-
-
-
-
-		Rect(0.53125f, 0f, 0.46875f, 1f)
-
-		uvRect.y = 1f - uvRect.y - uvRect.height;
-			0			0			1
-		GUI.DrawTextureWithTexCoords(drawRect, tex, uvRect);
-
-
 
 
 1 public static ThingCategoryDef Foods;
@@ -218,19 +47,27 @@ ResourcesRaw : 2		PlantMatter StoneBlocks
 StoneBlocks : 0
 Weapons : 2				WeaponsMelee WeaponsRanged
 
+aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican",10,10f), new ESItem("MealSimple",1,9f), new ESItem("MealFine",1,11f), new ESItem("Kibble",10,5f), new ESItem("Hay",10,4f),
+			new ESItem("RawBerries",1,5f), new ESItem("RawPotatoes",1,5f), new ESItem("RawCorn",1,5f), new ESItem("RawRice",1,5f), new ESItem("RawAgave",1,5f), new ESItem("InsectJelly",1,5f),
+			new ESItem("Milk",10,5f), new ESItem("EggChickenUnfertilized",1,3f)}).ToArray();
 
 
 
 
+public sealed class MovieTexture : Texture
 
+Pawn Average interests: 5
 
+	AridShrubland
+Animal		commonality	leatherInsulation	baseBodySize	danger (1,2,3)
+Squirrel	1			0.85				0.15			1
+Alphabeaver
+Capybara
+Chinchilla
+Boomrat		1			0.7					0.2				2
+Raccoon
+Rat			1			0.7					0.15			1
 
-
-
-
-
-
-
-		
-
+(commonality * baseBodySize) / danger = LeatherCommonality
+leatherInsulation / LeatherCommonality = LeatherCost
 		
