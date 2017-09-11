@@ -5,8 +5,8 @@ Changing different parts of the game for the love of coding.
 
 ### Features I am currently working on
 
--Main Menu rehual
--Custom new game process
+- Main Menu rehual
+- Custom new game process
 
 ### Notes
 
