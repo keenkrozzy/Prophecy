@@ -90,10 +90,8 @@ namespace Prophesy.ProGame
 			Pawn pawn = null;
 			if (!request.Newborn && !request.ForceGenerateNewPawn)
 			{
-				//Log.Message("if (!request.Newborn && !request.ForceGenerateNewPawn) = true");
 				if (request.Inhabitant && request.Tile != -1)
 				{
-					//Log.Message("if (request.Inhabitant && request.Tile != -1) = true");
 					Settlement settlement = Find.WorldObjects.WorldObjectAt<Settlement>(request.Tile);
 					if (settlement != null && settlement.previouslyGeneratedInhabitants.Any<Pawn>())
 					{
@@ -120,7 +118,6 @@ namespace Prophesy.ProGame
 			// Starting Pawns
 			if (pawn == null)
 			{
-				//Log.Message("if (pawn == null) = true");
 				pawn = GenerateNewNakedPawn(ref request);
 				if (pawn == null)
 				{

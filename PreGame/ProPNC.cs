@@ -106,9 +106,6 @@ namespace Prophesy.PreGame
             //Find.GameInitData.PrepForMapGen();
             //Find.Scenario.PreMapGenerate();
 
-
-            //ProDebug
-            Log.Message(Find.Scenario.ToString());
         }
 
         public override string PageTitle
@@ -199,7 +196,6 @@ namespace Prophesy.PreGame
 						if (Widgets.ButtonInvisible(KrozzyUtilities.RectAddition(rectButtonInvisibleAdjust, rectYadjusted, true, true), true))
 						{
 							SwitchCardOut(intCurCard);
-							//Log.Message(card.GetLabel() + " Clicked.");
 							break;
 						}
 					}
@@ -227,7 +223,6 @@ namespace Prophesy.PreGame
 
 					// Shape not switching cards Y
 					float floCardYMax2 = (mainRect.height * .05f) * templstPNC_CardsInOrder.Count;
-					//Log.Message("mainRect.height: " + mainRect.height.ToString());
 					float floCardYAdjust2 = floCardYMax2 + rect.y;
 					float floOutY2 = ((float)intCurSwitchAnimStep / (float)intSwitchAnimSteps) * floCardYAdjust2;
 
@@ -240,7 +235,6 @@ namespace Prophesy.PreGame
 					foreach (PNC_Card notSwitchCard in lstPNC_CardsInOrder)
 					{
 						Rect rectYadjusted = new Rect(rect.x, floOutY2 + floCardY, rect.width, rect.height);
-						//Log.Message("ProPNC.DoCards (Draw not switching cards)" + notSwitchCard.GetLabel() + " " + KrozzyUtilities.RectAddition(rectYadjusted, rectCardLabelAdjust).ToString() + " intCurSwitchAnimStep " + intCurSwitchAnimStep.ToString());
 						notSwitchCard.DrawCard(KrozzyUtilities.RectAddition(rectYadjusted, rectCardLabelAdjust));
 						floCardY = floCardY + (mainRect.height * .05f);		
 					}
@@ -257,7 +251,6 @@ namespace Prophesy.PreGame
 					{
 						boolSwitchingIn = true;
 						boolSwitchingOut = false;
-						//Log.Message("Switching out > Switching In");
 					}
 					else
 					{
@@ -357,12 +350,10 @@ namespace Prophesy.PreGame
 				for (int x = 0; x < intcardsneeded - 1; x++)
 				{
 					lstPNC_Cards.Add(new PNC_Card(lstPawns[x], intcardsneeded));
-					Log.Message("Added pawn card");
 				}
 
 				// Make Items Card
 				lstPNC_Cards.Add(new PNC_Card(null, intcardsneeded));
-                Log.Message("Added item card");
                 intCardNum = intcardsneeded;
 			}
 
@@ -443,9 +434,6 @@ namespace Prophesy.PreGame
 
 		//private void RandomizeCurPawn()
 		//{
-		//    //ProDebug
-		//    Log.Message("RandomizeCurePawn fired.");
-
 		//    if (!TutorSystem.AllowAction("RandomizePawn"))
 		//    {
 		//        return;

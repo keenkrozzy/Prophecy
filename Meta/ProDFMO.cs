@@ -297,7 +297,6 @@ namespace Prophesy.Meta
 
         public override void DoWindowContents(Rect _rect)
         {
-            //Log.Message(_rect.ToString());
             string str;
             float floTopY = _rect.y;
             float floInnerTopY;

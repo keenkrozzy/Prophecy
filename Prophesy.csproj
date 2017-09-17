@@ -54,8 +54,12 @@
   <ItemGroup>
     <Compile Include="Meta\ModWindowHelper.cs" />
     <Compile Include="PreGame\ESApparel.cs" />
+    <Compile Include="PreGame\ESDrugs.cs" />
     <Compile Include="PreGame\ESFoods.cs" />
+    <Compile Include="PreGame\ESItems.cs" />
+    <Compile Include="PreGame\ESResources.cs" />
     <Compile Include="PreGame\ESStartingItems.cs" />
+    <Compile Include="PreGame\ESWeapons.cs" />
     <Compile Include="PreGame\NewGameRules.cs" />
     <Compile Include="PreGame\ProEquipmentShop.cs" />
     <Compile Include="Meta\ProphecySettings.cs" />

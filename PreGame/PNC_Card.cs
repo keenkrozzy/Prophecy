@@ -49,7 +49,6 @@ namespace Prophesy.PreGame
 			{
 				eCardType = ePNC_Card_Type.Items;
 				ES = new ProEquipmentShop();
-                Log.Message("PNC_Card ctor fired for items card.");
             }
 
 			intNumCards = _intNumCards; 
@@ -457,7 +456,7 @@ namespace Prophesy.PreGame
                         break;
 
                         case "Weapons":
-                        ItemSheet(rectMenuSection, ES.Foods.aFoods, GameFont.Small);
+                        ItemSheet(rectMenuSection, ES.Weapons.aWeapons, GameFont.Small);
                         break;
 
                         case "Drugs":
@@ -469,7 +468,7 @@ namespace Prophesy.PreGame
                         break;
 
                         case "Items":
-                        ItemSheet(rectMenuSection, ES.Foods.aFoods, GameFont.Small);
+                        ItemSheet(rectMenuSection, ES.Items.aItems, GameFont.Small);
                         break;
                     }
 				}
@@ -504,6 +503,20 @@ namespace Prophesy.PreGame
 			GUI.Label(KrozzyUtilities.RectAddition(rectItemNameHeader, rectCard), strItemNameHeader, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Bold));
 			GUI.Label(KrozzyUtilities.RectAddition(rectItemAmountHeader, rectCard), strItemAmountHeader, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Bold));
 			GUI.Label(KrozzyUtilities.RectAddition(rectItemPriceHeader, rectCard), strItemPriceHeader, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Bold));
+
+			// Draw the buttons
+			if (Widgets.ButtonInvisible(KrozzyUtilities.RectAddition(rectItemNameHeader, rectCard)))
+			{
+				ES.SortItemsTool(ProEquipmentShop.ESSortList.Items, ProEquipmentShop.ESSortType.DefName);
+			}
+			if (Widgets.ButtonInvisible(KrozzyUtilities.RectAddition(rectItemAmountHeader, rectCard)))
+			{
+				ES.SortItemsTool(ProEquipmentShop.ESSortList.Items, ProEquipmentShop.ESSortType.ThingAmount);
+			}
+			if (Widgets.ButtonInvisible(KrozzyUtilities.RectAddition(rectItemPriceHeader, rectCard)))
+			{
+				ES.SortItemsTool(ProEquipmentShop.ESSortList.Items, ProEquipmentShop.ESSortType.Price);
+			}
 
 			// Reshape the _rectOut
 			_rectOut = new Rect(_rectOut.x, _rectOut.y + floHeaderHeight, _rectOut.width, _rectOut.height - floHeaderHeight);
@@ -627,6 +640,20 @@ namespace Prophesy.PreGame
 			GUI.Label(rectItemNameHeader, strItemNameHeader, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Bold));
 			GUI.Label(rectItemAmountHeader, strItemAmountHeader, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Bold));
 			GUI.Label(rectItemPriceHeader, strItemPriceHeader, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Bold));
+
+			// Draw the buttons
+			if (Widgets.ButtonInvisible(rectItemNameHeader))
+			{
+				ES.SortItemsTool(ProEquipmentShop.ESSortList.StartingItems, ProEquipmentShop.ESSortType.DefName);
+			}
+			if (Widgets.ButtonInvisible(rectItemAmountHeader))
+			{
+				ES.SortItemsTool(ProEquipmentShop.ESSortList.StartingItems, ProEquipmentShop.ESSortType.ThingAmount);
+			}
+			if (Widgets.ButtonInvisible(rectItemPriceHeader))
+			{
+				ES.SortItemsTool(ProEquipmentShop.ESSortList.StartingItems, ProEquipmentShop.ESSortType.Price);
+			}
 
 			// Reshape the rectOut
 			rectOut = new Rect(rectOut.x, rectOut.y + floHeaderHeight, rectOut.width, rectOut.height - floHeaderHeight);

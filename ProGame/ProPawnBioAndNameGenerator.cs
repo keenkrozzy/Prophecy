@@ -228,7 +228,7 @@ namespace Prophesy.ProGame
 			PawnNameCategory pawnNameCategory = pawn.RaceProps.nameCategory;
 			if (pawnNameCategory == PawnNameCategory.NoName)
 			{
-				Log.Message("Can't create a name of type NoName. Defaulting to HumanStandard.");
+				Log.Message("ProPawnBioAndNameGenerator.GeneratePawnName_Shuddled: Can't create a name of type NoName. Defaulting to HumanStandard.");
 				pawnNameCategory = PawnNameCategory.HumanStandard;
 			}
 			NameBank nameBank = PawnNameDatabaseShuffled.BankOf(pawnNameCategory);

@@ -42,7 +42,6 @@ namespace Prophesy.PreGame
             Traverse.Create(f).Field("factionDef").SetValue(FactionDefOf.PlayerColony);
             Traverse.Create(scen).Field("playerFaction").SetValue(f);
 
-
             // ***************** //
             // Set Scenario Body //
             // ***************** //
@@ -66,11 +65,6 @@ namespace Prophesy.PreGame
 
             //Inject List into Scenario.parts
             Traverse.Create(scen).Field("parts").SetValue(p);
-
-
-            //ProDebug
-            Log.Message("GenScenSkeleton method complete.");
-
 
             return scen;
         }

@@ -175,7 +175,7 @@ namespace Prophesy.Stock
             }
             catch
             {
-                Log.Message("Failed to Traverse BGPlanet");
+                Log.Message("ProTBin.LoadTextures: Failed to Traverse BGPlanet");
             }
 
 			// Textures for PNC_Cards

@@ -20,11 +20,15 @@ namespace Prophesy.PreGame
 		
         public float floTotalItemsPrice = 0f;
 
+		public ESStartingItems StartingItems = new ESStartingItems();
 		public ESFoods Foods;
-        public ESStartingItems StartingItems = new ESStartingItems();
 		public ESApparel Apparel;
-        
-        public ThingDef[] aApparelDefs = ThingCategoryDefOf.Apparel.DescendantThingDefs.ToArray();
+		public ESWeapons Weapons;
+		public ESFoods Drugs;
+		public ESFoods Resources;
+		public ESItems Items;
+
+		public ThingDef[] aApparelDefs = ThingCategoryDefOf.Apparel.DescendantThingDefs.ToArray();
         public ThingDef[] aWeaponsDefs = ThingCategoryDefOf.Weapons.DescendantThingDefs.ToArray();
         public ThingDef[] aDrugsDefs = 
             ThingCategoryDefOf.Drugs.DescendantThingDefs.Concat(
@@ -34,16 +38,17 @@ namespace Prophesy.PreGame
         public ThingDef[] aItemsDefs = ThingCategoryDefOf.Art.DescendantThingDefs.Concat(
             ThingCategoryDefOf.Items.childThingDefs).ToArray();
 
-	public ProEquipmentShop()
+		public ProEquipmentShop()
 		{
 
 			startingBiome = Find.WorldGrid[Find.GameInitData.startingTile].biome;
 
 			Foods = new ESFoods(startingBiome);
 			Apparel = new ESApparel(startingBiome);
+			Weapons = new ESWeapons();
+			Items = new ESItems();
 
-			Log.Message("ctor fired for ProEquipmentShop");
-        }
+		}
 
         public void LoadESItemsToScenario()
         {
@@ -166,6 +171,73 @@ namespace Prophesy.PreGame
 
             return i;
         }
+
+		public void SortItemsTool(ESSortList _list, ESSortType _type)
+		{
+			if (_list == ESSortList.Items)
+			{
+				switch (_type)
+				{
+					case ESSortType.DefName:
+						Foods.aFoods = Foods.aFoods.OrderBy(esi => esi.thing.Label).ToArray();
+						Apparel.aApparel = Apparel.aApparel.OrderBy(esi => esi.thing.Label).ToArray();
+						//Weapons. = Weapons.OrderBy(esi => esi.thing.Label).ToArray();
+						//Drugs. = Drugs.OrderBy(esi => esi.thing.Label).ToArray();
+						//Resources. = Resources.OrderBy(esi => esi.thing.Label).ToArray();
+						//Items. = Items.OrderBy(esi => esi.thing.Label).ToArray();
+						break;
+
+					case ESSortType.ThingAmount:
+						Foods.aFoods = Foods.aFoods.OrderBy(esi => esi.thingAmount).ToArray();
+						Apparel.aApparel = Apparel.aApparel.OrderBy(esi => esi.thingAmount).ToArray();
+						//Weapons = _aItems.OrderBy(esi => esi.thingAmount).ToArray();
+						//Drugs = _aItems.OrderBy(esi => esi.thingAmount).ToArray();
+						//Resources = _aItems.OrderBy(esi => esi.thingAmount).ToArray();
+						//Items = _aItems.OrderBy(esi => esi.thingAmount).ToArray();
+						break;
+
+					case ESSortType.Price:
+						Foods.aFoods = Foods.aFoods.OrderBy(esi => GetPrice(esi)).ToArray();
+						Apparel.aApparel = Apparel.aApparel.OrderBy(esi => GetPrice(esi)).ToArray();
+						//Weapons = _aItems.OrderBy(esi => esi.price).ToArray();
+						//Drugs = _aItems.OrderBy(esi => esi.price).ToArray();
+						//Resources = _aItems.OrderBy(esi => esi.price).ToArray();
+						//Items = _aItems.OrderBy(esi => esi.price).ToArray();
+						break;
+				}
+			}
+
+			if (_list == ESSortList.StartingItems)
+			{
+				switch (_type)
+				{
+					case ESSortType.DefName:
+						StartingItems.aStartingItems = StartingItems.aStartingItems.OrderBy(esi => esi.thing.Label).ToArray();
+						break;
+
+					case ESSortType.ThingAmount:
+						StartingItems.aStartingItems = StartingItems.aStartingItems.OrderBy(esi => esi.thingAmount).ToArray();
+						break;
+
+					case ESSortType.Price:
+						StartingItems.aStartingItems = StartingItems.aStartingItems.OrderBy(esi => esi.subtotal).ToArray();
+						break;
+				}
+			}
+		}
+
+		public enum ESSortType
+		{
+			DefName,
+			ThingAmount,
+			Price
+		}
+
+		public enum ESSortList
+		{
+			Items,
+			StartingItems
+		}
         
 	}
 

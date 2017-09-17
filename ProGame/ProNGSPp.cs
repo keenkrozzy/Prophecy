@@ -27,7 +27,6 @@ namespace Prophesy.ProGame
 
 		public static bool PreFNewGeneratedStartingPawn(ref Pawn __result)
 		{
-			Log.Message("PreFNewGeneratedStartingPawn has fired.");
 			PawnGenerationRequest request = new PawnGenerationRequest(Faction.OfPlayer.def.basicMemberKind, Faction.OfPlayer, PawnGenerationContext.PlayerStarter, -1, true, false, false, false, true, false, 26f, false, true, true, false, false, null, null, null, null, null, null);
 			Pawn pawn = null;
 			try

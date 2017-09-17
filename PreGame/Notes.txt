@@ -71,3 +71,28 @@ Rat			1			0.7					0.15			1
 (commonality * baseBodySize) / danger = LeatherCommonality
 leatherInsulation / LeatherCommonality = LeatherCost
 		
+
+
+
+
+
+
+public void DrawIcon(Rect _rect)
+		{
+			if (thing.DrawColor != null)
+			{
+				GUI.color = thing.DrawColor;
+			}
+
+			Texture icon;
+			if (!thing.def.uiIconPath.NullOrEmpty())
+			{
+				icon = thing.def.uiIcon;
+			}
+			else
+			{
+				icon = thing.Graphic.ExtractInnerGraphicFor(thing).MatSingle.mainTexture;
+			}
+			GUI.DrawTexture(_rect, icon, ScaleMode.ScaleToFit);
+			GUI.color = Color.white;
+		}

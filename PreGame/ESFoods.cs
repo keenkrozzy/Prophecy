@@ -142,7 +142,11 @@ namespace Prophesy.PreGame
 
 		public void DrawIcon(Rect _rect)
 		{
-			GUI.color = thing.DrawColor;
+			if (thing.DrawColor != null)
+			{
+				GUI.color = thing.DrawColor;
+			}
+
 			Texture icon;
 			if (!thing.def.uiIconPath.NullOrEmpty())
 			{
