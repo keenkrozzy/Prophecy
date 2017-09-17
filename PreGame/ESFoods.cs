@@ -69,8 +69,6 @@ namespace Prophesy.PreGame
         public ThingDef thingDef;
         public ThingDef stuff = null;
 		public Thing thing = null;
-		//public Texture2D icon = null;
-		//public Color iconColor = Color.white;
         public string strNameLabel;
         public int thingAmount;
         public int thingAmountTotal;
@@ -97,7 +95,6 @@ namespace Prophesy.PreGame
                     stuff = ThingDef.Named(_stuff);
                     strNameLabel = "ThingMadeOfStuffLabel".Translate(new object[]{ stuff.LabelAsStuff, thingDef.label });
                     thing = ThingMaker.MakeThing(thingDef, stuff);
-					//mini = MinifyUtility.MakeMinified(thing);
                 }
                 catch
                 {

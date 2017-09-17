@@ -127,7 +127,8 @@ namespace Prophesy.ProGame
             {
                 return;
             }
-            int arg_AA_0 = base.CalculateFinalCount(map);
+            int intFinalCount = CalculateFinalCount(map);
+			//Log.Message(string.Concat(thingDef.label, " Count: ", count.ToString(), " intFinalCount: ", intFinalCount.ToString()));
             IntRange one;
             if (thingDef.ingestible != null && thingDef.ingestible.IsMeal && thingDef.stackLimit <= 10)
             {
@@ -141,7 +142,7 @@ namespace Prophesy.ProGame
             {
                 one = new IntRange(thingDef.stackLimit, thingDef.stackLimit);
             }
-            List<int> list = GenStep_ScatterThings.CountDividedIntoStacks(arg_AA_0, one);
+            List<int> list = CountDividedIntoStacks(intFinalCount, one);
             for (int i = 0; i < list.Count; i++)
             {
                 IntVec3 intVec = new IntVec3();

@@ -169,7 +169,7 @@ namespace Prophesy.PreGame
 
 			//}
 
-			base.DoBottomButtons(rect, "Start".Translate(), null, null, true);
+			DoBottomButtons(rect, "Start".Translate(), null, null, true);
         }
 
 		private void DoCards(List<PNC_Card> _lstCards, Rect mainRect)
@@ -184,9 +184,7 @@ namespace Prophesy.PreGame
 				foreach (PNC_Card card in _lstCards)
 				{
 					Rect rectYadjusted = new Rect(rect.x, rect.y + floCardY, rect.width, rect.height);
-
 					
-
 					// Draw card tops only for cards not at the top of the stack
 					if (intCurCard != _lstCards.Count)
 					{
@@ -206,7 +204,6 @@ namespace Prophesy.PreGame
 
 					intCurCard += 1;
 					floCardY = floCardY + (mainRect.height * .05f);
-
 				}
 			}
 			else
@@ -285,8 +282,6 @@ namespace Prophesy.PreGame
 						notSwitchCard.DrawCard(KrozzyUtilities.RectAddition(rectYadjusted, rectCardLabelAdjust));
 						floCardY = floCardY + (mainRect.height * .05f);
 					}
-
-					
 
 					if (intCurSwitchAnimStep <= 1)
 					{
@@ -393,10 +388,6 @@ namespace Prophesy.PreGame
                 //this.curPawn = Find.GameInitData.startingPawns[0];
                 nextAct = () => PageUtility.InitGameStart();
             }
-			
-			
-
-
 		}
 
 		protected override bool CanDoNext()
@@ -432,7 +423,22 @@ namespace Prophesy.PreGame
 			{
 				((IDisposable)(object)enumerator).Dispose();
 			}
-			//return flag;
+		}
+
+		protected override void DoNext()
+		{
+			if (next != null)
+			{
+				Find.WindowStack.Add(this.next);
+			}
+			if (nextAct != null)
+			{
+				ESStartingItems.LoadESItemsToScenario();
+				nextAct();
+			}
+			TutorSystem.Notify_Event("PageClosed");
+			TutorSystem.Notify_Event("GoToNextPage");
+			this.Close(true);
 		}
 
 		//private void RandomizeCurPawn()

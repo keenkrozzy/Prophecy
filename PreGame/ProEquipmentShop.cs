@@ -20,7 +20,7 @@ namespace Prophesy.PreGame
 		
         public float floTotalItemsPrice = 0f;
 
-		public ESStartingItems StartingItems = new ESStartingItems();
+		//public ESStartingItems StartingItems;
 		public ESFoods Foods;
 		public ESApparel Apparel;
 		public ESWeapons Weapons;
@@ -28,15 +28,15 @@ namespace Prophesy.PreGame
 		public ESResources Resources;
 		public ESItems Items;
 
-		public ThingDef[] aApparelDefs = ThingCategoryDefOf.Apparel.DescendantThingDefs.ToArray();
-        public ThingDef[] aWeaponsDefs = ThingCategoryDefOf.Weapons.DescendantThingDefs.ToArray();
-        public ThingDef[] aDrugsDefs = 
-            ThingCategoryDefOf.Drugs.DescendantThingDefs.Concat(
-                ThingCategoryDefOf.Medicine.DescendantThingDefs).ToArray();
-        public ThingDef[] aResourcesRawDefs = ThingCategoryDefOf.ResourcesRaw.DescendantThingDefs.Concat(
-            ThingCategoryDefOf.Leathers.DescendantThingDefs).ToArray();
-        public ThingDef[] aItemsDefs = ThingCategoryDefOf.Art.DescendantThingDefs.Concat(
-            ThingCategoryDefOf.Items.childThingDefs).ToArray();
+		//public ThingDef[] aApparelDefs = ThingCategoryDefOf.Apparel.DescendantThingDefs.ToArray();
+  //      public ThingDef[] aWeaponsDefs = ThingCategoryDefOf.Weapons.DescendantThingDefs.ToArray();
+  //      public ThingDef[] aDrugsDefs = 
+  //          ThingCategoryDefOf.Drugs.DescendantThingDefs.Concat(
+  //              ThingCategoryDefOf.Medicine.DescendantThingDefs).ToArray();
+  //      public ThingDef[] aResourcesRawDefs = ThingCategoryDefOf.ResourcesRaw.DescendantThingDefs.Concat(
+  //          ThingCategoryDefOf.Leathers.DescendantThingDefs).ToArray();
+  //      public ThingDef[] aItemsDefs = ThingCategoryDefOf.Art.DescendantThingDefs.Concat(
+  //          ThingCategoryDefOf.Items.childThingDefs).ToArray();
 
 		public ProEquipmentShop()
 		{
@@ -51,22 +51,6 @@ namespace Prophesy.PreGame
 			Items = new ESItems();
 
 		}
-
-        public void LoadESItemsToScenario()
-        {
-            ESItem[] aesi = new ESItem[0];
-
-            ProScenPart_ScatterThingsNearPlayerStart[] aproScatThings = new ProScenPart_ScatterThingsNearPlayerStart[aesi.Length];
-
-            for (int i = 0; i <= aesi.Length; i++)
-            {
-                aproScatThings[i].ThingDef = aesi[i].thingDef;
-                aproScatThings[i].Count = aesi[i].thingAmount;
-                aproScatThings[i].Radius = 0;
-
-                Traverse.Create(Current.Game.Scenario).Field("parts").GetValue<List<ScenPart>>().Add(aproScatThings[i]);
-            }        
-        }
 
         public void EquipESItem(ESItem _item)
         {
@@ -84,14 +68,14 @@ namespace Prophesy.PreGame
 				esi = new ESItem(_item.thingDef.ToString(), _item.thingAmount, _item.basePrice, _item.stuff.ToString());
 			}
 
-			if (StartingItems.aStartingItems.Any(x => x.thing.Label == esi.thing.Label))
+			if (ESStartingItems.aStartingItems.Any(x => x.thing.Label == esi.thing.Label))
             {
-                StartingItems.aStartingItems.FirstOrDefault(x => x.thingDef == esi.thingDef).IncrementItem(esi.thingAmount, esi.itemAmount, GetPrice(esi), GetPrice(esi));
+                ESStartingItems.aStartingItems.FirstOrDefault(x => x.thingDef == esi.thingDef).IncrementItem(esi.thingAmount, esi.itemAmount, GetPrice(esi), GetPrice(esi));
             }
             else
             {
                 ESItem[] aesi = { esi };
-                StartingItems.aStartingItems = StartingItems.aStartingItems.Concat(aesi).ToArray();
+                ESStartingItems.aStartingItems = ESStartingItems.aStartingItems.Concat(aesi).ToArray();
             }
 
         }
@@ -117,7 +101,7 @@ namespace Prophesy.PreGame
 				};
 			}
 
-			ESItem esiCur = StartingItems.aStartingItems.FirstOrDefault(x => x.thing.Label == esi.thing.Label);
+			ESItem esiCur = ESStartingItems.aStartingItems.FirstOrDefault(x => x.thing.Label == esi.thing.Label);
 
             esiCur.DecrementItem(esi);
 
@@ -125,9 +109,9 @@ namespace Prophesy.PreGame
 
             if (esiCur.thingAmountTotal <= 0)
             {
-                List<ESItem> lstESItem = StartingItems.aStartingItems.ToList();
-                lstESItem.RemoveAt(StartingItems.aStartingItems.FirstIndexOf(x => x.thing.Label == esi.thing.Label));
-                StartingItems.aStartingItems = lstESItem.ToArray();
+                List<ESItem> lstESItem = ESStartingItems.aStartingItems.ToList();
+                lstESItem.RemoveAt(ESStartingItems.aStartingItems.FirstIndexOf(x => x.thing.Label == esi.thing.Label));
+                ESStartingItems.aStartingItems = lstESItem.ToArray();
             }
         }
 
@@ -136,9 +120,9 @@ namespace Prophesy.PreGame
             float floPrice = _item.price;
             int intItemCount = 0;
 
-            if (StartingItems.aStartingItems.Any(x => x.thing.Label == _item.thing.Label))
+            if (ESStartingItems.aStartingItems.Any(x => x.thing.Label == _item.thing.Label))
             {
-                intItemCount = StartingItems.aStartingItems.FirstOrDefault(x => x.thing.Label == _item.thing.Label).itemAmount;
+                intItemCount = ESStartingItems.aStartingItems.FirstOrDefault(x => x.thing.Label == _item.thing.Label).itemAmount;
             }
 
             for (int i = 0; i < intItemCount; i++)
@@ -154,9 +138,9 @@ namespace Prophesy.PreGame
             float floPrice = _item.basePrice;
             int intItemCount = 0;
 
-            if (StartingItems.aStartingItems.Any(x => x.thing.Label == _item.thing.Label))
+            if (ESStartingItems.aStartingItems.Any(x => x.thing.Label == _item.thing.Label))
             {
-                intItemCount = StartingItems.aStartingItems.FirstOrDefault(x => x.thing.Label == _item.thing.Label).itemAmount -1;
+                intItemCount = ESStartingItems.aStartingItems.FirstOrDefault(x => x.thing.Label == _item.thing.Label).itemAmount -1;
             }
 
             for (int i = 0; i < intItemCount; i++)
@@ -214,15 +198,15 @@ namespace Prophesy.PreGame
 				switch (_type)
 				{
 					case ESSortType.DefName:
-						StartingItems.aStartingItems = StartingItems.aStartingItems.OrderBy(esi => esi.thing.Label).ToArray();
+						ESStartingItems.aStartingItems = ESStartingItems.aStartingItems.OrderBy(esi => esi.thing.Label).ToArray();
 						break;
 
 					case ESSortType.ThingAmount:
-						StartingItems.aStartingItems = StartingItems.aStartingItems.OrderBy(esi => esi.thingAmount).ToArray();
+						ESStartingItems.aStartingItems = ESStartingItems.aStartingItems.OrderBy(esi => esi.thingAmount).ToArray();
 						break;
 
 					case ESSortType.Price:
-						StartingItems.aStartingItems = StartingItems.aStartingItems.OrderBy(esi => esi.subtotal).ToArray();
+						ESStartingItems.aStartingItems = ESStartingItems.aStartingItems.OrderBy(esi => esi.subtotal).ToArray();
 						break;
 				}
 			}

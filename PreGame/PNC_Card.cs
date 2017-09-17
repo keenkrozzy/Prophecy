@@ -602,7 +602,7 @@ namespace Prophesy.PreGame
         {
             // Calculate variables		
             float floMenuHeight = rectCard.height * .8f;
-            ESItem[] esiStartingItems = ES.StartingItems.aStartingItems;
+            ESItem[] esiStartingItems = ESStartingItems.aStartingItems;
 
             // Shape the menu section
             Rect rectMenuSection = new Rect(rectCard.width * .625f, rectCard.height * .1f, rectCard.width * .3f, floMenuHeight);
@@ -762,14 +762,14 @@ namespace Prophesy.PreGame
 
 				if(esItemCurSelectedToUnequip == null)
 				{
-					esItemCurSelectedToUnequip = ES.StartingItems.aStartingItems[intCurSelectedToUnequip];
+					esItemCurSelectedToUnequip = ESStartingItems.aStartingItems[intCurSelectedToUnequip];
 				}
             }
         }
 
         private void DoUnequipButton()
         {
-            ESItem[] esiStartingItems = ES.StartingItems.aStartingItems;
+            ESItem[] esiStartingItems = ESStartingItems.aStartingItems;
 
             // Shape the button
             Rect rectEqiupButton = new Rect(rectCard.width * .4f, rectCard.height * .3f, rectCard.width * .2f, rectCard.height * .1f);
