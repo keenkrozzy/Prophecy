@@ -460,11 +460,11 @@ namespace Prophesy.PreGame
                         break;
 
                         case "Drugs":
-                        ItemSheet(rectMenuSection, ES.Foods.aFoods, GameFont.Small);
+                        ItemSheet(rectMenuSection, ES.Drugs.aDrugs, GameFont.Small);
                         break;
 
                         case "Resources":
-                        ItemSheet(rectMenuSection, ES.Foods.aFoods, GameFont.Small);
+                        ItemSheet(rectMenuSection, ES.Resources.aResources, GameFont.Small);
                         break;
 
                         case "Items":
@@ -806,7 +806,7 @@ namespace Prophesy.PreGame
 
             Text.Font = GameFont.Small;
 
-			NewGameRules.floCurItemPoints = NewGameRules.floStartingPoints - ES.floTotalItemsPrice;
+			NewGameRules.floCurItemPoints = NewGameRules.floStartingItemPoints - ES.floTotalItemsPrice;
 
 		}
 

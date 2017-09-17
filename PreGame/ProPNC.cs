@@ -44,7 +44,7 @@ namespace Prophesy.PreGame
 
 		private int intCardNum = 0;
 
-		private float floPoints = NewGameRules.floStartingPoints;
+		//private float floPoints = NewGameRules.floStartingItemPoints;
 
 		private Rect rectCardLabelAdjust = new Rect();
 
@@ -329,13 +329,16 @@ namespace Prophesy.PreGame
 		private void DoPoints(Rect _rect)
 		{
 			// Make string
-			string strLabel = "Item Points: " + String.Format("{0:0}", NewGameRules.floCurItemPoints);
+			string strCurItemPoints = "Item Points: " + String.Format("{0:0}", NewGameRules.floCurItemPoints);
+			string strCurPawnPoints = "Pawn Points: " + String.Format("{0:0}", NewGameRules.floCurPawnPoints);
 
 			// Shape label
-			Rect rectLabel = new Rect(_rect.x, _rect.y, Text.CalcSize(strLabel).x, Text.CalcSize(strLabel).y);
+			Rect rectCurItemPoints = new Rect(_rect.x, _rect.y, Text.CalcSize(strCurItemPoints).x, Text.CalcSize(strCurItemPoints).y);
+			Rect rectCurPawnPoints = new Rect(_rect.x, _rect.y + Text.CalcSize(strCurItemPoints).y, Text.CalcSize(strCurPawnPoints).x, Text.CalcSize(strCurPawnPoints).y);
 
 			// Draw label
-			Widgets.Label(rectLabel, strLabel);
+			Widgets.Label(rectCurItemPoints, strCurItemPoints);
+			Widgets.Label(rectCurPawnPoints, strCurPawnPoints);
 		}
 
 		private void PopulateCards()

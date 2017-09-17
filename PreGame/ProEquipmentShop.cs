@@ -24,8 +24,8 @@ namespace Prophesy.PreGame
 		public ESFoods Foods;
 		public ESApparel Apparel;
 		public ESWeapons Weapons;
-		public ESFoods Drugs;
-		public ESFoods Resources;
+		public ESDrugs Drugs;
+		public ESResources Resources;
 		public ESItems Items;
 
 		public ThingDef[] aApparelDefs = ThingCategoryDefOf.Apparel.DescendantThingDefs.ToArray();
@@ -46,6 +46,8 @@ namespace Prophesy.PreGame
 			Foods = new ESFoods(startingBiome);
 			Apparel = new ESApparel(startingBiome);
 			Weapons = new ESWeapons();
+			Drugs = new ESDrugs();
+			Resources = new ESResources();
 			Items = new ESItems();
 
 		}

@@ -9,8 +9,10 @@ namespace Prophesy.PreGame
 	[StaticConstructorOnStartup]
 	public static class NewGameRules
 	{
-		public static float floStartingPoints = 1000f;
+		public static float floStartingItemPoints = 2000f;
 		public static float floCurItemPoints = 0f;
+		public static float floStartingPawnPoints = 1000f;
+		public static float floCurPawnPoints = 0f;
 
 		static NewGameRules()
 		{
