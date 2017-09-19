@@ -10,12 +10,24 @@ Changing different parts of the game for the love of coding.
 
 ### Notes
 
-Arid shrublands has place-holder apparel while I test some things. Still need to make Classes to handle item generation.
+Currently working on the Pawn Card Edit buttons.
 
 ### Acknowledgements
 
-Spdskatr, Why_is_that, Erdelf, and Xen from the #rimworld-mod-development channel on the Rimworld Discord.
+Spdskatr, Why_is_that, Erdelf, Xen, and Mehni from the #rimworld-mod-development channel on the Rimworld Discord.
 
  Harmony
 
  MIT License
+ 
+ Visual Studio Community Edition
+ 
+ Notepad++
+ 
+ ILSpy
+ 
+ Gimp
+ 
+ Google Drive
+ 
+ GitHub
