@@ -17,8 +17,6 @@ Currently working on the Pawn Card Edit buttons.
 Spdskatr, Why_is_that, Erdelf, Xen, and Mehni from the #rimworld-mod-development channel on the Rimworld Discord.
 
  Harmony
-
- MIT License
  
  Visual Studio Community Edition
  
@@ -31,3 +29,5 @@ Spdskatr, Why_is_that, Erdelf, Xen, and Mehni from the #rimworld-mod-development
  Google Drive
  
  GitHub
+ 
+ ###### *MIT License*
