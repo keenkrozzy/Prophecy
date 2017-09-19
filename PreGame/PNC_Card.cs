@@ -36,7 +36,8 @@ namespace Prophesy.PreGame
         //private int intCurSelectedAmountToUnequip = 0;
         //private int intCurSelectedPriceToUnequip = 0;
         private ProEquipmentShop ES;
-        
+		private PNC_Card_PawnCustomStats PCS;
+
 
 		public PNC_Card(Pawn _pawn = null, int _intNumCards = 0)
 		{
@@ -44,6 +45,7 @@ namespace Prophesy.PreGame
 			{
 				pawn = _pawn;
 				eCardType = ePNC_Card_Type.Pawn;
+				PCS = new PNC_Card_PawnCustomStats();
 			}
 			else
 			{
@@ -71,6 +73,7 @@ namespace Prophesy.PreGame
 				DoBackstories();
 				DoSkills();
 				DoTraits();
+				PCS.DoCustomStats(rectCard, pawn);
 			}
 
 			if (eCardType == ePNC_Card_Type.Items)
@@ -106,7 +109,8 @@ namespace Prophesy.PreGame
 
 		private void DrawLabel(Rect _rect)
 		{
-			Rect rect = new Rect(_rect.x + _rect.width * .05f, _rect.y, 0f, 0f);
+			Rect rectHead = new Rect(_rect.x + (_rect.width * .025f), _rect.y, 0f, 0f);
+			Rect rectLabel = new Rect(0f, _rect.y, 0f, 0f);
 			Text.Font = GameFont.Medium;
 
 			if (eCardType == ePNC_Card_Type.Pawn)
@@ -114,20 +118,28 @@ namespace Prophesy.PreGame
 				Vector2 vect2 = new Vector2();
 				vect2 = Text.CalcSize(pawn.Label);
 
-				rect.width = vect2.x;
-				rect.height = vect2.y;
+				rectLabel.width = vect2.x;
+				rectLabel.height = vect2.y;
+				rectLabel.x = rectHead.x + vect2.y;
 
-				Widgets.Label(rect, pawn.Label);
+				float floHeadAdjust = vect2.y * .1f;
+				rectHead.y += floHeadAdjust;
+				rectHead.width = vect2.y - floHeadAdjust;
+				rectHead.height = vect2.y - floHeadAdjust;
+
+				Widgets.Label(rectLabel, pawn.Label);
+				GUI.DrawTexture(rectHead, PortraitsCache.Get(pawn, rectHead.size, new Vector3(0f, 0f, .3f), 4f), ScaleMode.ScaleToFit);
 			}
 			else if (eCardType == ePNC_Card_Type.Items)
 			{
 				Vector2 vect2 = new Vector2();
 				vect2 = Text.CalcSize("Items");
 
-				rect.width = vect2.x;
-				rect.height = vect2.y;
+				rectLabel.width = vect2.x;
+				rectLabel.height = vect2.y;
+				rectLabel.x = rectHead.x + vect2.y;
 
-				Widgets.Label(rect, "Items");
+				Widgets.Label(rectLabel, "Items");
 			}
 
 			Text.Font = GameFont.Small;
@@ -190,7 +202,7 @@ namespace Prophesy.PreGame
 		private void DoMainDesc()
 		{
 			string strMainDesc = pawn.MainDesc(true);
-			Rect rect = new Rect(rectCard.width * .05f, rectCard.height * .05f, Text.CalcSize(strMainDesc).x, Text.CalcSize(strMainDesc).y);
+			Rect rect = new Rect(rectCard.width * .025f, rectCard.height * .05f, Text.CalcSize(strMainDesc).x, Text.CalcSize(strMainDesc).y);
 			Widgets.Label(KrozzyUtilities.RectAddition(rect, rectCard),strMainDesc);
 			TooltipHandler.TipRegion(KrozzyUtilities.RectAddition(rect, rectCard), () => pawn.ageTracker.AgeTooltipString, 6873641);
 		}

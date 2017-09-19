@@ -23,7 +23,7 @@ namespace Prophesy.PreGame
 			{
 				case "AridShrubland":
 					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 10, 10f), new ESItem("Kibble", 10, 5f), new ESItem("Hay", 10, 4f),
-					new ESItem("RawBerries",1,5f), new ESItem("RawPotatoes",1,5f), new ESItem("RawCorn",1,5f), new ESItem("RawRice",1,5f),
+					new ESItem("RawBerries",5,25f), new ESItem("RawPotatoes",5,25f), new ESItem("RawCorn",5,25f), new ESItem("RawRice",5,25f),
 					new ESItem("Milk",10,5f), new ESItem("EggChickenUnfertilized",1,3f), new ESItem("InsectJelly",1,5f)}).ToArray();
 					break;
 				case "Desert":

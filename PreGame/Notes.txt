@@ -71,5 +71,3 @@ Rat			1			0.7					0.15			1
 (commonality * baseBodySize) / danger = LeatherCommonality
 leatherInsulation / LeatherCommonality = LeatherCost
 		
-
-

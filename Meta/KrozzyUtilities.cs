@@ -4,13 +4,16 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using Verse;
+using RimWorld;
 
 namespace Prophesy.Meta
 {
+	[StaticConstructorOnStartup]
 	public static class KrozzyUtilities
 	{
 		private static Font[] fontStyles = new Font[3];
 		private static Color[] colors = new Color[3];
+		
 
 		static KrozzyUtilities()
 		{
@@ -131,6 +134,6 @@ namespace Prophesy.Meta
 		Arial_small,
 		Arial_medium,
 		Calibri_tiny
-	}
+	}	
 
 }
