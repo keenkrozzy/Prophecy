@@ -86,6 +86,17 @@ namespace Prophesy.PreGame
 			Widgets.ButtonText(_rect, "Edit Traits", true, true);
 		}
 
+		public float GetTotalCost(Pawn _pawn)
+		{
+			float floSkillsCost = 0f;
+
+			foreach (SkillRecord sr in _pawn.skills.skills)
+			{
+				floSkillsCost += NewGameRules.GetSkillCost(_pawn.ageTracker.AgeBiologicalYears, sr.levelInt);
+			}
+
+			return floSkillsCost;
+		}
 		
 	}
 }

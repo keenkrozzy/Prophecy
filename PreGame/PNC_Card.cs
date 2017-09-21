@@ -46,6 +46,7 @@ namespace Prophesy.PreGame
 				pawn = _pawn;
 				eCardType = ePNC_Card_Type.Pawn;
 				PCS = new PNC_Card_PawnCustomStats();
+				NewGameRules.AddPawnToCurPoints(pawn);
 			}
 			else
 			{
@@ -83,11 +84,9 @@ namespace Prophesy.PreGame
                 DoStartingItems();
                 DoEquipButton();
                 DoUnequipButton();
-                DoTotalCostLabel();
             }
 
-
-
+			DoTotalCostLabel();
 
 		}
 
@@ -99,11 +98,8 @@ namespace Prophesy.PreGame
 			Widgets.DrawMenuSection(_rect, true);
 			rectCard = _rect;
 			DrawLabel(_rect);
-
-            if (eCardType == ePNC_Card_Type.Items)
-            {
-                DoTotalCostLabel();
-            }
+			DoTotalCostLabel();
+            
 
         }
 
@@ -804,22 +800,43 @@ namespace Prophesy.PreGame
 
         private void DoTotalCostLabel()
         {
-            // Calculate variables
-            Text.Font = GameFont.Medium;
-            string strTotalItemsPrice = String.Concat("Cost: ", String.Format("{0:0}", ES.floTotalItemsPrice));
-            Vector2 vecSize = Text.CalcSize(strTotalItemsPrice);
-            float floPosX = (rectCard.width - vecSize.x) - (rectCard.width * .05f);
+			if (eCardType == ePNC_Card_Type.Pawn)
+			{
+				// Calculate variables
+				Text.Font = GameFont.Medium;
+				float floTotalPrice = PCS.GetTotalCost(pawn);
+				string strTotalPrice = String.Concat("Cost: ", String.Format("{0:0}", floTotalPrice));
+				Vector2 vecSize = Text.CalcSize(strTotalPrice);
+				float floPosX = (rectCard.width - vecSize.x) - (rectCard.width * .05f);
 
-            // Shape the label
-            Rect rectTotalCostLabel = new Rect(floPosX, rectCard.height * 0f, vecSize.x, vecSize.y);
+				// Shape the label
+				Rect rectTotalCostLabel = new Rect(floPosX, rectCard.height * 0f, vecSize.x, vecSize.y);
 
-            // Draw the label
-            Widgets.Label(KrozzyUtilities.RectAddition(rectTotalCostLabel, rectCard), strTotalItemsPrice);
+				// Draw the label
+				Widgets.Label(KrozzyUtilities.RectAddition(rectTotalCostLabel, rectCard), strTotalPrice);
 
-            Text.Font = GameFont.Small;
+				Text.Font = GameFont.Small;
 
-			NewGameRules.floCurItemPoints = NewGameRules.floStartingItemPoints - ES.floTotalItemsPrice;
+				NewGameRules.UpdateCurPawnPoints(pawn, floTotalPrice);
+			}
+			else if (eCardType == ePNC_Card_Type.Items)
+			{
+				// Calculate variables
+				Text.Font = GameFont.Medium;
+				string strTotalPrice = String.Concat("Cost: ", String.Format("{0:0}", ES.floTotalItemsPrice));
+				Vector2 vecSize = Text.CalcSize(strTotalPrice);
+				float floPosX = (rectCard.width - vecSize.x) - (rectCard.width * .05f);
 
+				// Shape the label
+				Rect rectTotalCostLabel = new Rect(floPosX, rectCard.height * 0f, vecSize.x, vecSize.y);
+
+				// Draw the label
+				Widgets.Label(KrozzyUtilities.RectAddition(rectTotalCostLabel, rectCard), strTotalPrice);
+
+				Text.Font = GameFont.Small;
+
+				NewGameRules.floCurItemPoints = NewGameRules.floStartingItemPoints - ES.floTotalItemsPrice;
+			}
 		}
 
 		public string GetLabel()

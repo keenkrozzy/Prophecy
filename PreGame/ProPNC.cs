@@ -36,6 +36,8 @@ namespace Prophesy.PreGame
 
 		private List<PNC_Card> templstPNC_CardsInOrder = new List<PNC_Card>();
 
+		PNC_Card cardItemsCard;
+
 		private bool boolSwitchingOut = false;
 		private bool boolSwitchingIn = false;
 
@@ -51,6 +53,10 @@ namespace Prophesy.PreGame
 		private Rect rectCard = new Rect();
 
 		private Rect rectButtonInvisibleAdjust = new Rect();
+
+		private int intRandomAllTries = 0;
+
+		MonoBehaviour mb = new MonoBehaviour();
 
 		// Create New Game
 
@@ -147,8 +153,11 @@ namespace Prophesy.PreGame
 			// Draw Cards
 			DoCards(lstPNC_CardsInOrder, mainRect);
 
-			//Draw Points
+			// Draw Points
 			DoPoints(mainRect);
+
+			// Draw Buttons
+			DoRandomAllPawns(mainRect);
 
 			//try
 			//{
@@ -319,8 +328,6 @@ namespace Prophesy.PreGame
 			templstPNC_CardsInOrder.Clear();
 		}
 
-
-
 		private void DoPoints(Rect _rect)
 		{
 			// Make string
@@ -336,7 +343,22 @@ namespace Prophesy.PreGame
 			Widgets.Label(rectCurPawnPoints, strCurPawnPoints);
 		}
 
-		private void PopulateCards()
+		private void DoRandomAllPawns(Rect _rect)
+		{
+
+			// Shape Button
+			Rect rectRandomAllPawns = new Rect(_rect.x, _rect.y + (_rect.height * .1f), _rect.width * .125f, _rect.height * .075f);
+
+			// Draw Button
+			if (Widgets.ButtonText(rectRandomAllPawns, "Randomize All Pawns", true, true, true))
+			{
+				
+				//RandomizeAllPawns();
+				Current.Root_Entry.StartCoroutine(RandomizeAllPawns());
+			}
+		}
+
+		private void PopulateCards(bool bItemCard = true)
 		{
 			// Populate Cards
 			if (lstPNC_Cards.Count + 1 != intCardNum)
@@ -351,8 +373,13 @@ namespace Prophesy.PreGame
 				}
 
 				// Make Items Card
-				lstPNC_Cards.Add(new PNC_Card(null, intcardsneeded));
-                intCardNum = intcardsneeded;
+				if (bItemCard)
+				{
+					cardItemsCard = new PNC_Card(null, intcardsneeded);
+				}
+				lstPNC_Cards.Add(cardItemsCard);
+
+				intCardNum = intcardsneeded;
 			}
 
 			// Set initial Card Order
@@ -363,15 +390,10 @@ namespace Prophesy.PreGame
 			
 		}
 
-
-
 		public override void PostOpen()
         {
             base.PostOpen();
             TutorSystem.Notify_Event("PageStart-ConfigureStartingPawns");
-
-			// Get Pawns
-			//lstPawns = Find.GameInitData.startingPawns;
 
 			// Set initial Cards
 			PopulateCards();
@@ -385,7 +407,6 @@ namespace Prophesy.PreGame
             base.PreOpen();
             if (Find.GameInitData.startingPawns.Count > 0)
             {
-                //this.curPawn = Find.GameInitData.startingPawns[0];
                 nextAct = () => PageUtility.InitGameStart();
             }
 		}
@@ -438,7 +459,7 @@ namespace Prophesy.PreGame
 			}
 			TutorSystem.Notify_Event("PageClosed");
 			TutorSystem.Notify_Event("GoToNextPage");
-			this.Close(true);
+			Close(true);
 		}
 
 		//private void RandomizeCurPawn()
@@ -461,6 +482,59 @@ namespace Prophesy.PreGame
 		//    while (!StartingPawnUtility.WorkTypeRequirementsSatisfied());
 		//    TutorSystem.Notify_Event("RandomizePawn");
 		//}
+
+		private IEnumerator RandomizeAllPawns()
+		{
+			// Temp variable to store generated pawns
+			Pawn[] aPawns = new Pawn[0];
+
+			// Try 15 times to generate pawn with WorkTypeRequirementsSatisfied?
+			int num = 0;
+			do
+			{
+				// Loop through current pawns and generate random in place
+				foreach (Pawn p in Find.GameInitData.startingPawns)
+				{
+					Pawn curpawn = new Pawn();
+
+					curpawn = StartingPawnUtility.RandomizeInPlace(p);
+
+					aPawns = aPawns.Concat(new Pawn[] { curpawn }).ToArray();
+
+
+				}
+
+				NewGameRules.ClearCurPawns();
+
+				Find.GameInitData.startingPawns = aPawns.ToList();
+				aPawns = new Pawn[0];
+
+				lstCardRects = new List<Rect>();
+				lstPNC_Cards = new List<PNC_Card>();
+				lstPNC_CardsInOrder = new List<PNC_Card>();
+				templstPNC_CardsInOrder = new List<PNC_Card>();
+				intCardNum = 0;
+
+				PopulateCards(false);
+
+				if (num > 10 && StartingPawnUtility.WorkTypeRequirementsSatisfied())
+				{
+					yield break;
+				}
+
+				num++;
+				if (num <= 15)
+				{
+					yield return new WaitForSeconds(.05f);
+					Log.Message(num.ToString());
+					continue;
+				}
+				yield break;
+			}
+			while (num < 5);
+		}
+
+
 
 		//public void SelectPawn(Pawn c)
 		//{
