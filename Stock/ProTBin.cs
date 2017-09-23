@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using Verse;
 using Harmony;
+using Prophesy.Meta;
 
 namespace Prophesy.Stock
 {
@@ -93,6 +94,8 @@ namespace Prophesy.Stock
 		public static Texture2D texWeaponsTab_Hover;
 		public static Texture2D texVellum;
 
+		public static Font fontEvilBible;
+
 
 		static ProTBin()
         {
@@ -160,7 +163,7 @@ namespace Prophesy.Stock
             UsePlanetDayNightSystem = ContentFinder<Texture2D>.Get("UI/Buttons/UsePlanetDayNightSystem", true);
             ExpandingIcons = ContentFinder<Texture2D>.Get("UI/Buttons/ExpandingIcons", true);
             SpeedButtonTextures = new Texture2D[] { ContentFinder<Texture2D>.Get("UI/TimeControls/TimeSpeedButton_Pause", true), ContentFinder<Texture2D>.Get("UI/TimeControls/TimeSpeedButton_Normal", true), ContentFinder<Texture2D>.Get("UI/TimeControls/TimeSpeedButton_Fast", true), ContentFinder<Texture2D>.Get("UI/TimeControls/TimeSpeedButton_Superfast", true), ContentFinder<Texture2D>.Get("UI/TimeControls/TimeSpeedButton_Superfast", true) };
-
+			
 			
 	}
 
@@ -208,6 +211,8 @@ namespace Prophesy.Stock
 
 			texVellum = ContentFinder<Texture2D>.Get("Prophecy/PreGame/Vellum", true);
 			texVellum.wrapMode = TextureWrapMode.Repeat;
+
+			
 
 		}
 

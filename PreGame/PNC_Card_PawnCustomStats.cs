@@ -32,8 +32,6 @@ namespace Prophesy.PreGame
 			floPaddingY = rectCard.height * .05f;
 			Rect rectGroup = new Rect(floPaddingX, rectCard.height * .8f, rectCard.width - (floPaddingX * 2f), rectCard.height * .15f);
 			rectGroup = KrozzyUtilities.RectAddition(rectGroup, rectCard);
-			
-			
 
 			Widgets.DrawBoxSolid(rectGroup, cBackdrop);
 			GUI.BeginGroup(rectGroup);
@@ -47,7 +45,6 @@ namespace Prophesy.PreGame
 			Rect rectInterests = new Rect(rectBackstory.x + rectBackstory.width + floPaddingX, floPaddingY, floButtonWidth, floButtonHeight);
 			Rect rectSkills = new Rect(rectInterests.x + rectInterests.width + floPaddingX, floPaddingY, floButtonWidth, floButtonHeight);
 			Rect rectTraits = new Rect(rectSkills.x + rectSkills.width + floPaddingX, floPaddingY, floButtonWidth, floButtonHeight);
-
 
 			EditAge(rectAge, _pawn);
 			EditBackstory(rectBackstory, _pawn);
@@ -78,7 +75,10 @@ namespace Prophesy.PreGame
 
 		private void EditSkills(Rect _rect, Pawn _pawn)
 		{
-			Widgets.ButtonText(_rect, "Edit Skills", true, true);
+			if (Widgets.ButtonText(_rect, "Edit Skills", true, true))
+			{
+				Find.WindowStack.Add(new ProDialog_EditSkills(_pawn));
+			}
 		}
 
 		private void EditTraits(Rect _rect, Pawn _pawn)

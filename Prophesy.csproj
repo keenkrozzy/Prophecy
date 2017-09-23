@@ -63,6 +63,7 @@
     <Compile Include="PreGame\NewGameRules.cs" />
     <Compile Include="PreGame\PNC_Card_PawnCustomStats.cs" />
     <Compile Include="PreGame\ProDialog_EditAge.cs" />
+    <Compile Include="PreGame\ProDialog_EditSkills.cs" />
     <Compile Include="PreGame\ProEquipmentShop.cs" />
     <Compile Include="Meta\ProphecySettings.cs" />
     <Compile Include="ProGame\ProGenStep_ScatterThings.cs" />

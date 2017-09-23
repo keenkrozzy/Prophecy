@@ -5,6 +5,8 @@ using System.Reflection;
 using UnityEngine;
 using Verse;
 using RimWorld;
+using System.IO;
+
 
 namespace Prophesy.Meta
 {
@@ -12,7 +14,7 @@ namespace Prophesy.Meta
 	public static class KrozzyUtilities
 	{
 		private static Font[] fontStyles = new Font[3];
-		private static Color[] colors = new Color[3];
+		private static Color[] colors = new Color[4];
 		
 
 		static KrozzyUtilities()
@@ -23,6 +25,7 @@ namespace Prophesy.Meta
 			colors[0] = Color.black;
 			colors[1] = Color.white;
 			colors[2] = Color.yellow;
+			colors[3] = Color.red;
 		}
 
 		/// <summary>
@@ -106,19 +109,35 @@ namespace Prophesy.Meta
 			return mousePositionOnUI;
 		}
 
-		public static GUIStyle BuildStyle(Fonts _font, Colors _color, FontStyle _style = FontStyle.Normal)
+		public static GUIStyle BuildStyle(Fonts _font, Colors _color, FontStyle _style = FontStyle.Normal, TextAnchor _textAnchor = TextAnchor.UpperLeft)
 		{
 			GUIStyle style = new GUIStyle() 
 			{
 				font = fontStyles[(int)_font]
 			};
-
+			
 			style.normal.textColor = colors[(int)_color];
             style.wordWrap = true;
 			style.fontStyle = _style;
+			style.alignment = _textAnchor;
 
 			return style;
 		}
+
+		public static GUIStyle BuildStyleButton(Fonts _font, Colors _color,  FontStyle _style = FontStyle.Normal, TextAnchor _textAnchor = TextAnchor.UpperLeft)
+		{
+			GUIStyle style = new GUIStyle() {
+				font = fontStyles[(int)_font]
+			};
+			//style.onNormal = UnityEngine.UI.
+			style.normal.textColor = colors[(int)_color];
+			style.wordWrap = true;
+			style.fontStyle = _style;
+			style.alignment = _textAnchor;
+
+			return style;
+		}
+
 
 	}
 
@@ -126,7 +145,8 @@ namespace Prophesy.Meta
 	{
 		Black,
 		White,
-		Yellow
+		Yellow,
+		Red
 	}
 
 	public enum Fonts

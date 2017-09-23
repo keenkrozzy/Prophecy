@@ -56,8 +56,6 @@ namespace Prophesy.PreGame
 
 		private int intRandomAllTries = 0;
 
-		MonoBehaviour mb = new MonoBehaviour();
-
 		// Create New Game
 
 		//public static void BeginScenarioConfiguration(Scenario scen, Page originPage)
@@ -330,18 +328,33 @@ namespace Prophesy.PreGame
 
 		private void DoPoints(Rect _rect)
 		{
-			// Make string
+			// Make strings
 			string strCurItemPoints = "Item Points: " + String.Format("{0:0}", NewGameRules.floCurItemPoints);
 			string strCurPawnPoints = "Pawn Points: " + String.Format("{0:0}", NewGameRules.floCurPawnPoints);
 
-			// Shape label
+			// Shape labels
 			Rect rectCurItemPoints = new Rect(_rect.x, _rect.y, Text.CalcSize(strCurItemPoints).x, Text.CalcSize(strCurItemPoints).y);
 			Rect rectCurPawnPoints = new Rect(_rect.x, _rect.y + Text.CalcSize(strCurItemPoints).y, Text.CalcSize(strCurPawnPoints).x, Text.CalcSize(strCurPawnPoints).y);
 
-			// Draw label
-			Widgets.Label(rectCurItemPoints, strCurItemPoints);
-			Widgets.Label(rectCurPawnPoints, strCurPawnPoints);
-		}
+			// Draw labels
+			if (NewGameRules.floCurItemPoints >= 0)
+			{
+				GUI.Label(rectCurItemPoints, strCurItemPoints, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Normal));
+			}
+			else
+			{
+				GUI.Label(rectCurItemPoints, strCurItemPoints, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Red, FontStyle.Normal));
+			}
+
+			if (NewGameRules.floCurPawnPoints >= 0)
+			{
+				GUI.Label(rectCurPawnPoints, strCurPawnPoints, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Normal));
+			}
+			else
+			{
+				GUI.Label(rectCurPawnPoints, strCurPawnPoints, KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.Red, FontStyle.Normal));
+			}
+		}			
 
 		private void DoRandomAllPawns(Rect _rect)
 		{
@@ -414,7 +427,7 @@ namespace Prophesy.PreGame
 		protected override bool CanDoNext()
 		{
 			bool flag;
-			if(NewGameRules.floCurItemPoints < 0f)
+			if(NewGameRules.floCurItemPoints < 0f || NewGameRules.floCurPawnPoints < 0f)
 			{
 				Messages.Message("You do not have enough points to continue.", MessageSound.RejectInput);
 				flag = false;
@@ -526,12 +539,12 @@ namespace Prophesy.PreGame
 				if (num <= 15)
 				{
 					yield return new WaitForSeconds(.05f);
-					Log.Message(num.ToString());
+					//Log.Message(num.ToString());
 					continue;
 				}
 				yield break;
 			}
-			while (num < 5);
+			while (num < 4);
 		}
 
 
