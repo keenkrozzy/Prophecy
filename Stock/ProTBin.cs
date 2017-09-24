@@ -163,8 +163,6 @@ namespace Prophesy.Stock
             UsePlanetDayNightSystem = ContentFinder<Texture2D>.Get("UI/Buttons/UsePlanetDayNightSystem", true);
             ExpandingIcons = ContentFinder<Texture2D>.Get("UI/Buttons/ExpandingIcons", true);
             SpeedButtonTextures = new Texture2D[] { ContentFinder<Texture2D>.Get("UI/TimeControls/TimeSpeedButton_Pause", true), ContentFinder<Texture2D>.Get("UI/TimeControls/TimeSpeedButton_Normal", true), ContentFinder<Texture2D>.Get("UI/TimeControls/TimeSpeedButton_Fast", true), ContentFinder<Texture2D>.Get("UI/TimeControls/TimeSpeedButton_Superfast", true), ContentFinder<Texture2D>.Get("UI/TimeControls/TimeSpeedButton_Superfast", true) };
-			
-			
 	}
 
         private static void LoadTextures()
@@ -211,9 +209,6 @@ namespace Prophesy.Stock
 
 			texVellum = ContentFinder<Texture2D>.Get("Prophecy/PreGame/Vellum", true);
 			texVellum.wrapMode = TextureWrapMode.Repeat;
-
-			
-
 		}
 
 		private static Texture2D BumpGradient(Color _lowColor, Color _highColor)
