@@ -1,4 +1,7 @@
-Exception: This license does not apply to Ludeon Studios ("Ludeon"). This mod is in agreement with thier EULA and thus I give Ludeon permission to: use, copy, modify, adapt, distribute, and publicly display this content, for free or as part of a commercial arrangement.
+Exception: This license does not apply to Ludeon Studios ("Ludeon"). This 
+mod is in agreement with thier EULA and thus I give Ludeon permission to: 
+use, copy, modify, adapt, distribute, and publicly display this content, 
+for free or as part of a commercial arrangement.
 
                                  Apache License
                            Version 2.0, January 2004
