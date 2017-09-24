@@ -65,7 +65,10 @@ namespace Prophesy.PreGame
 
 		private void EditBackstory(Rect _rect, Pawn _pawn)
 		{
-			Widgets.ButtonText(_rect, "Edit Backstory", true, true);
+			if (Widgets.ButtonText(_rect, "Edit Backstory", true, true))
+			{
+				Messages.Message("The Edit Backstory process is under construction.", MessageSound.RejectInput);
+			}
 		}
 
 		private void EditPassions(Rect _rect, Pawn _pawn)
@@ -86,7 +89,10 @@ namespace Prophesy.PreGame
 
 		private void EditTraits(Rect _rect, Pawn _pawn)
 		{
-			Widgets.ButtonText(_rect, "Edit Traits", true, true);
+			if (Widgets.ButtonText(_rect, "Edit Traits", true, true))
+			{
+				Messages.Message("The Edit Traits process is under construction.", MessageSound.RejectInput);
+			}
 		}
 
 		public float GetTotalCost(Pawn _pawn)
