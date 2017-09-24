@@ -48,7 +48,7 @@ namespace Prophesy.PreGame
 
 			EditAge(rectAge, _pawn);
 			EditBackstory(rectBackstory, _pawn);
-			EditInterests(rectInterests, _pawn);
+			EditPassions(rectInterests, _pawn);
 			EditSkills(rectSkills, _pawn);
 			EditTraits(rectTraits, _pawn);
 
@@ -68,9 +68,12 @@ namespace Prophesy.PreGame
 			Widgets.ButtonText(_rect, "Edit Backstory", true, true);
 		}
 
-		private void EditInterests(Rect _rect, Pawn _pawn)
+		private void EditPassions(Rect _rect, Pawn _pawn)
 		{
-			Widgets.ButtonText(_rect, "Edit Passions", true, true);
+			if (Widgets.ButtonText(_rect, "Edit Passions", true, true))
+			{
+				Find.WindowStack.Add(new ProDialog_EditPassions(_pawn));
+			}
 		}
 
 		private void EditSkills(Rect _rect, Pawn _pawn)
@@ -92,8 +95,13 @@ namespace Prophesy.PreGame
 
 			foreach (SkillRecord sr in _pawn.skills.skills)
 			{
-				floSkillsCost += NewGameRules.GetSkillCost(_pawn.ageTracker.AgeBiologicalYears, sr.levelInt);
+				if (sr.TotallyDisabled != true)
+				{
+					floSkillsCost += NewGameRules.GetSkillCost(_pawn.ageTracker.AgeBiologicalYears, sr.levelInt);
+				}
 			}
+
+			floSkillsCost += NewGameRules.GetPassionTotalCost(_pawn);
 
 			return floSkillsCost;
 		}

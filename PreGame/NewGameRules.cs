@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Verse;
+using RimWorld;
 
 namespace Prophesy.PreGame
 {
@@ -11,10 +12,12 @@ namespace Prophesy.PreGame
 	{
 		public static float floStartingItemPoints = 2000f;
 		public static float floCurItemPoints = 0f;
-		public static float floStartingPawnPoints = 1000f;
+		public static float floStartingPawnPoints = 2000f;
 		public static float floCurPawnPoints = 0;
 		public static float[] afloCurPawnPoints = new float[0];
 		public static string[] astrCurPawnPoints = new string[0];
+		private static float floBasePassionCost = 1f;
+		private static float floIncrementingReturn = .1f;
 
 		static NewGameRules()
 		{
@@ -33,7 +36,7 @@ namespace Prophesy.PreGame
 		}
 
 		public static void UpdateCurPawnPoints(Pawn _pawn, float _floPoints)
-		{ 
+		{
 			int index = astrCurPawnPoints.FirstIndexOf(x => x == _pawn.GetUniqueLoadID());
 			afloCurPawnPoints[index] = _floPoints;
 
@@ -53,7 +56,7 @@ namespace Prophesy.PreGame
 			astrCurPawnPoints = new string[0];
 		}
 
-		public static float GetSkillCost(int _intAge,int _intSkillLevel)
+		public static float GetSkillCost(int _intAge, int _intSkillLevel)
 		{
 			float floAgeFactor = 32f / (float)_intAge;
 
@@ -104,6 +107,133 @@ namespace Prophesy.PreGame
 				default:
 					return 0f;
 			}
+		}
+
+		public static float GetPassionCost(Pawn _pawn, Passion _passion)
+		{
+			float floIncrements = 0f;
+			float floPassionScore = 0f;
+			float floMinorCost = 50f;
+			float floMajorCost = 150f;
+
+			//if (_passion == Passion.Minor && floPassionScore > 0f)
+			//{
+			//	return ((floPassionScore * floIncrementingReturn) * floMinorCost) + (floMinorCost * floBasePassionCost);
+			//}
+			//else if (_passion == Passion.Major && floPassionScore > 0f)
+			//{
+			//	return ((floPassionScore * floIncrementingReturn) * floMajorCost) + (floMajorCost * floBasePassionCost);
+			//}
+			//else if (_passion == Passion.Minor)
+			//{
+			//	return floMinorCost * floBasePassionCost;
+			//}
+			//else if (_passion == Passion.Major)
+			//{
+			//	return floMajorCost * floBasePassionCost;
+			//}
+			//else
+			//{
+			//	return 0f;
+			//}
+
+			foreach (SkillRecord sk in _pawn.skills.skills)
+			{
+				if (sk.passion == Passion.Minor)
+				{
+					floIncrements += 1f;
+					floPassionScore += floMinorCost * floBasePassionCost;
+				}
+				else if (sk.passion == Passion.Major)
+				{
+					floIncrements += 2f;
+					floPassionScore += floMajorCost * floBasePassionCost;
+				}
+			}
+
+			//if (_passion == Passion.Minor && floPassionScore > 0f)
+			//{
+			//	return ((floPassionScore * floIncrementingReturn) * floMinorCost) + (floMinorCost * floBasePassionCost);
+			//}
+			//else if (_passion == Passion.Major && floPassionScore > 0f)
+			//{
+			//	return ((floPassionScore * floIncrementingReturn) * floMajorCost) + (floMajorCost * floBasePassionCost);
+			//}
+
+
+			//return (floIncrements * floIncrementingReturn * floPassionScore) + floPassionScore;
+
+
+			if (_passion == Passion.Minor)
+			{
+				//return floMinorCost * floBasePassionCost;
+				return (((floIncrements + 1) * floIncrementingReturn * (floPassionScore + floMinorCost)) + (floPassionScore + floMinorCost)) - GetPassionTotalCost(_pawn);
+			}
+			else if (_passion == Passion.Major)
+			{
+				//return floMajorCost * floBasePassionCost;
+				return (((floIncrements + 1) * floIncrementingReturn * (floPassionScore + floMajorCost - floMinorCost)) + (floPassionScore + floMajorCost - floMinorCost)) - GetPassionTotalCost(_pawn);
+			}
+			else
+			{
+				return 0f;
+			}
+		}
+
+		public static float GetPassionTotalCost(Pawn _pawn)
+		{
+			float floIncrements = 0f;
+			float floPassionScore = 0;
+			float floMinorCost = 50f;
+			float floMajorCost = 150f;
+
+			foreach (SkillRecord sk in _pawn.skills.skills)
+			{
+				//if (sk.passion == Passion.Minor && floPassionScore > 0f)
+				////if (sk.passion == Passion.Minor)
+				//{
+				//floPassionScore += ((floPassionScore * floIncrementingReturn) * floMinorCost) + (floMinorCost * floBasePassionCost);
+				//}
+				//else if (sk.passion == Passion.Major && floPassionScore > 0f)
+				//	//else if (sk.passion == Passion.Major)
+				//{
+				//floPassionScore += ((floPassionScore * floIncrementingReturn) * floMajorCost) + (floMajorCost * floBasePassionCost);
+				//}
+				//else if (sk.passion == Passion.Minor)
+				//{
+				//	floPassionScore += floMinorCost * floBasePassionCost;
+				//}
+				//else if (sk.passion == Passion.Major)
+				//{
+				//	floPassionScore += floMajorCost * floBasePassionCost;
+				//}
+
+				//if (sk.passion == Passion.Minor && floPassionScore > 0f)
+				////if (sk.passion == Passion.Minor)
+				//{
+				//	floIncrements += 1f;
+				//	floPassionScore += floMinorCost * floBasePassionCost;
+				//}
+				//else if (sk.passion == Passion.Major && floPassionScore > 0f)
+				////else if (sk.passion == Passion.Major)
+				//{
+				//	floIncrements += 2f;
+				//	floPassionScore += floMajorCost * floBasePassionCost;
+				//}
+				if (sk.passion == Passion.Minor)
+				{
+					floIncrements += 1f;
+					floPassionScore += floMinorCost * floBasePassionCost;
+				}
+				else if (sk.passion == Passion.Major)
+				{
+					floIncrements += 2f;
+					floPassionScore += floMajorCost * floBasePassionCost;
+				}
+			}
+
+			//return floPassionScore;
+			return (floIncrements * floIncrementingReturn * floPassionScore) + floPassionScore;
 		}
 	}
 }
