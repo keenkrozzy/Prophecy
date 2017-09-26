@@ -5,7 +5,7 @@ using System;
 using RimWorld;
 using Verse.Sound;
 
-namespace Prophesy.Meta
+namespace Prophecy.Meta
 {
 	// reference: https://github.com/erdelf/GodsOfRimworld/blob/master/Source/Ankh/ModControl.cs
 	// reference: https://github.com/erdelf/PrisonerRansom/

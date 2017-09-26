@@ -7,8 +7,8 @@
     <ProjectGuid>{796A79A2-6754-4847-9910-28DE0A4E5FF1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Source\Properties</AppDesignerFolder>
-    <RootNamespace>Prophesy</RootNamespace>
-    <AssemblyName>Prophesy</AssemblyName>
+    <RootNamespace>Prophecy</RootNamespace>
+    <AssemblyName>Prophecy</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -18,7 +18,7 @@
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>G:\Rimworld Local\RimWorld1557Win\Mods\Prophesy_dev1.1.2\Assemblies\</OutputPath>
+    <OutputPath>G:\Rimworld Local\RimWorld1557Win\Mods\Prophecy\Assemblies\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -63,6 +63,7 @@
     <Compile Include="PreGame\NewGameRules.cs" />
     <Compile Include="PreGame\PNC_Card_PawnCustomStats.cs" />
     <Compile Include="PreGame\ProDialog_EditAge.cs" />
+    <Compile Include="PreGame\ProDialog_EditBackground.cs" />
     <Compile Include="PreGame\ProDialog_EditPassions.cs" />
     <Compile Include="PreGame\ProDialog_EditSkills.cs" />
     <Compile Include="PreGame\ProEquipmentShop.cs" />

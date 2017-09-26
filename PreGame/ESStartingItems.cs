@@ -6,9 +6,9 @@ using System.Reflection;
 using Harmony;
 using Verse;
 using RimWorld;
-using Prophesy.ProGame;
+using Prophecy.ProGame;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
     public static class ESStartingItems
     {

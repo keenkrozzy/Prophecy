@@ -6,9 +6,9 @@ using System.Reflection;
 using RimWorld;
 using RimWorld.Planet;
 using Verse;
-using Prophesy.ProGame;
+using Prophecy.ProGame;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
     public class ProEquipmentShop
     {

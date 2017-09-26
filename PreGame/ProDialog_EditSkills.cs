@@ -4,9 +4,9 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 using RimWorld;
-using Prophesy.Meta;
+using Prophecy.Meta;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
 	public class ProDialog_EditSkills : Window
 	{

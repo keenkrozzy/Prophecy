@@ -2,7 +2,7 @@
 using UnityEngine;
 using Verse;
 
-namespace Prophesy.Meta
+namespace Prophecy.Meta
 {
     public class ProListableOption
     {

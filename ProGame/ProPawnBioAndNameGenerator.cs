@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using RimWorld;
+using Prophecy.ProGame.Elements;
 
-namespace Prophesy.ProGame
+namespace Prophecy.ProGame
 {
 	public static class ProPawnBioAndNameGenerator
 	{
@@ -22,10 +23,16 @@ namespace Prophesy.ProGame
 
 		public static void GiveAppropriateBioAndNameTo(Pawn pawn, string requiredLastName)
 		{
-			if ((Rand.Value < 0.25f || pawn.kindDef.factionLeader) && TryGiveSolidBioTo(pawn, requiredLastName))
-			{
-				return;
-			}
+			/*************************************
+			*DO NOT DELETE! MAY NEED THIS LATER!!*
+			*************************************/
+			//if ((Rand.Value < 0.25f || pawn.kindDef.factionLeader) && TryGiveSolidBioTo(pawn, requiredLastName))
+			//{
+			//	/*****Logging*****/
+			//	Log.Message("((Rand.Value < 0.25f || pawn.kindDef.factionLeader) && TryGiveSolidBioTo(pawn, requiredLastName)) true. line 28");
+			//	/*****Logging*****/
+			//	return;
+			//}
 			GiveShuffledBioTo(pawn, pawn.Faction.def, requiredLastName);
 		}
 
@@ -41,12 +48,33 @@ namespace Prophesy.ProGame
 
 		private static void SetBackstoryInSlot(Pawn pawn, BackstorySlot slot, ref Backstory backstory, FactionDef factionType)
 		{
-			if (!(from kvp in BackstoryDatabase.allBackstories
-				  where kvp.Value.shuffleable && kvp.Value.spawnCategories.Contains(factionType.backstoryCategory) && kvp.Value.slot == slot && (slot != BackstorySlot.Adulthood || !kvp.Value.requiredWorkTags.OverlapsWithOnAnyWorkType(pawn.story.childhood.workDisables))
-				  select kvp.Value).TryRandomElement(out backstory))
+			try
 			{
-				Log.Error(string.Concat(new object[]
+				if (slot == BackstorySlot.Childhood)
 				{
+					if (!(from bs in ProBackstories.aBSChildNeo where bs.shuffleable && bs.spawnCategories.Contains(factionType.backstoryCategory) &&
+						  bs.slot == slot select bs).TryRandomElement(out backstory))
+					{
+					}
+				}
+				else
+				{
+					if (!(from bs in ProBackstories.aBSAdultNeo where bs.shuffleable && bs.spawnCategories.Contains(factionType.backstoryCategory) &&
+						  bs.slot == slot && !bs.requiredWorkTags.OverlapsWithOnAnyWorkType(pawn.story.childhood.workDisables) select bs).TryRandomElement(out backstory))
+					{
+					}
+				}
+			}
+			catch
+			{
+				Log.Message("ProPawnBioAndNameGenerator.SetBackstoryInSlot failed. Using Vanilla.");
+
+				if (!(from kvp in BackstoryDatabase.allBackstories
+					  where kvp.Value.shuffleable && kvp.Value.spawnCategories.Contains(factionType.backstoryCategory) && kvp.Value.slot == slot && (slot != BackstorySlot.Adulthood || !kvp.Value.requiredWorkTags.OverlapsWithOnAnyWorkType(pawn.story.childhood.workDisables))
+					  select kvp.Value).TryRandomElement(out backstory))
+				{
+					Log.Error(string.Concat(new object[]
+					{
 					"No shuffled ",
 					slot,
 					" found for ",
@@ -54,10 +82,11 @@ namespace Prophesy.ProGame
 					" of ",
 					factionType,
 					". Defaulting."
-				}));
-				backstory = (from kvp in BackstoryDatabase.allBackstories
-							 where kvp.Value.slot == slot
-							 select kvp).RandomElement<KeyValuePair<string, Backstory>>().Value;
+					}));
+					backstory = (from kvp in BackstoryDatabase.allBackstories
+								 where kvp.Value.slot == slot
+								 select kvp).RandomElement<KeyValuePair<string, Backstory>>().Value;
+				}
 			}
 		}
 
@@ -88,14 +117,6 @@ namespace Prophesy.ProGame
 		private static PawnBio TryGetRandomUnusedSolidBioFor(string backstoryCategory, PawnKindDef kind, Gender gender, string requiredLastName)
 		{
 			NameTriple prefName = null;
-			if (Rand.Value < 0.5f)
-			{
-				prefName = Prefs.RandomPreferredName();
-				if (prefName != null && (prefName.UsedThisGame || (requiredLastName != null && prefName.Last != requiredLastName)))
-				{
-					prefName = null;
-				}
-			}
 			SolidBioDatabase.allBios.Shuffle<PawnBio>();
 			PawnBio pawnBio;
 			while (true)

@@ -8,9 +8,9 @@ using UnityEngine;
 using Verse;
 using Verse.Sound;
 using RimWorld;
-using Prophesy.Meta;
+using Prophecy.Meta;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
     class ProPNC : Page
     {

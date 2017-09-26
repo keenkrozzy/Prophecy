@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
-namespace Prophesy.ProGame
+namespace Prophecy.ProGame
 {
     public class ProGenStep_ScatterThings : GenStep_Scatterer
     {

@@ -4,10 +4,10 @@ using System.Linq;
 using UnityEngine;
 using Verse;
 using RimWorld;
-using Prophesy.Meta;
-using Prophesy.Stock;
+using Prophecy.Meta;
+using Prophecy.Stock;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
 	class ProDialog_EditPassions : Window
 	{

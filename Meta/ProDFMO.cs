@@ -7,7 +7,7 @@ using Verse;
 using Verse.Sound;
 using RimWorld;
 
-namespace Prophesy.Meta
+namespace Prophecy.Meta
 {
     // Attempting to make a dialogue box that can display FloatMenuOptions using code from FloatMenu
     class ProDFMO : Window

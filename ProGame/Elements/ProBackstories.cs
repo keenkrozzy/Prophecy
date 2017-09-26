@@ -4,17 +4,21 @@ using System.Linq;
 using System.Text;
 using RimWorld;
 using Verse;
+using System.Diagnostics;
 
-namespace Prophesy.ProGame.Elements
+namespace Prophecy.ProGame.Elements
 {
+	[StaticConstructorOnStartup]
 	public static class ProBackstories
 	{
-		public static Backstory BSChildNeo01;
 
-		public static Backstory BSAdultNeo01;
+		public static Backstory[] aBSChildNeo = new Backstory[0];
+
+		public static Backstory[] aBSAdultNeo = new Backstory[0];
 
 		static ProBackstories()
 		{
+			Backstory BSChildNeo01 = new Backstory();
 			BSChildNeo01.slot = BackstorySlot.Childhood;
 			BSChildNeo01.SetTitle("Amateur Astronomer");
 			BSChildNeo01.SetTitleShort("Astronomer");
@@ -24,7 +28,19 @@ namespace Prophesy.ProGame.Elements
 			BSChildNeo01.bodyTypeMale = BodyType.Male;
 			BSChildNeo01.bodyTypeFemale = BodyType.Female;
 
+			Backstory BSChildNeo02 = new Backstory();
+			BSChildNeo02.slot = BackstorySlot.Childhood;
+			BSChildNeo02.SetTitle("Amateur Botanist");
+			BSChildNeo02.SetTitleShort("Botanist");
+			BSChildNeo02.baseDesc = "Spending many summers crawling through dirt, NAME found he had quite the green thumb. Instead of learning to cook the food HECAP grew, HECAP just grew more and more.";
+			BSChildNeo02.skillGains = new Dictionary<string, int> { { "Growing", 4 } };
+			BSChildNeo02.spawnCategories = new List<string>(new string[] { "Civil" });
+			BSChildNeo02.bodyTypeMale = BodyType.Male;
+			BSChildNeo02.bodyTypeFemale = BodyType.Female;
 
+			
+
+			Backstory BSAdultNeo01 = new Backstory();
 			BSAdultNeo01.slot = BackstorySlot.Adulthood;
 			BSAdultNeo01.SetTitle("Foreign Herd Owner");
 			BSAdultNeo01.SetTitleShort("Herder");
@@ -35,6 +51,31 @@ namespace Prophesy.ProGame.Elements
 			BSAdultNeo01.spawnCategories = new List<string>(new string[] { "Civil" });
 			BSAdultNeo01.bodyTypeMale = BodyType.Male;
 			BSAdultNeo01.bodyTypeFemale = BodyType.Female;
+
+			Backstory BSAdultNeo02 = new Backstory();
+			BSAdultNeo02.slot = BackstorySlot.Adulthood;
+			BSAdultNeo02.SetTitle("Storyteller");
+			BSAdultNeo02.SetTitleShort("Storyteller");
+			BSAdultNeo02.baseDesc = "NAME has traveled the world gathering and recounting many legends and histories. After many years, HECAP now looks for place to belong.";
+			BSAdultNeo02.requiredWorkTags = WorkTags.Social | WorkTags.Artistic;
+			BSAdultNeo02.skillGains = new Dictionary<string, int> { { "Artistic", 4 }, { "Construction", -4 }, { "Crafting", 1 }, { "Growing", -4 }, { "Medicine", -2 }, { "Mining", -4 }, { "Social", 3 } };
+			BSAdultNeo02.spawnCategories = new List<string>(new string[] { "Civil" });
+			BSAdultNeo02.bodyTypeMale = BodyType.Male;
+			BSAdultNeo02.bodyTypeFemale = BodyType.Female;
+
+			aBSChildNeo = aBSChildNeo.Concat(new Backstory[] { BSChildNeo01, BSChildNeo02 }).ToArray();
+			aBSAdultNeo = aBSAdultNeo.Concat(new Backstory[] { BSAdultNeo01, BSAdultNeo02 }).ToArray();
+
+			foreach (Backstory bs in aBSChildNeo)
+			{
+				bs.PostLoad();
+				bs.ResolveReferences();
+			}
+			foreach (Backstory bs in aBSAdultNeo)
+			{
+				bs.PostLoad();
+				bs.ResolveReferences();
+			}
 		}
 
 		//public static Backstory GetRandomAdultMaleBackstory()

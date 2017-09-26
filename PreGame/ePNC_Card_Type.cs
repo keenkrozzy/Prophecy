@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
 	public enum ePNC_Card_Type
 	{

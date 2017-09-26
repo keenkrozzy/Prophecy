@@ -7,7 +7,7 @@ using RimWorld;
 using RimWorld.Planet;
 using UnityEngine;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
     public class ESFoods
     {

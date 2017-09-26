@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 
-namespace Prophesy.Meta
+namespace Prophecy.Meta
 {
     public static class ProOptionListingUtility
     {

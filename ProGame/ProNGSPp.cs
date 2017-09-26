@@ -6,7 +6,7 @@ using Harmony;
 using Verse;
 using RimWorld;
 
-namespace Prophesy.ProGame
+namespace Prophecy.ProGame
 {
 	[StaticConstructorOnStartup]
 	internal static	class ProNGSPp

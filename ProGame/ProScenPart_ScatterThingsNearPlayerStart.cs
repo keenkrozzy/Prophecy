@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Verse;
 
-namespace Prophesy.ProGame
+namespace Prophecy.ProGame
 {
     public class ProScenPart_ScatterThingsNearPlayerStart : ScenPart_ScatterThings
     {

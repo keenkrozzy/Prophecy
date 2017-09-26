@@ -9,7 +9,7 @@ using Verse.Sound;
 using RimWorld;
 using Harmony;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
     public class ProCWP : Page
     {

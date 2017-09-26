@@ -8,10 +8,10 @@ using RimWorld;
 using Verse;
 using Verse.Profile;
 using UnityEngine;
-using Prophesy.Stock;
-using Prophesy.Meta;
+using Prophecy.Stock;
+using Prophecy.Meta;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
     [StaticConstructorOnStartup]
     internal static class ProDMMCp

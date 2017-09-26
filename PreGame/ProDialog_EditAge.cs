@@ -5,7 +5,7 @@ using UnityEngine;
 using Verse;
 using RimWorld;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
 	public class ProDialog_EditAge : Window
 	{

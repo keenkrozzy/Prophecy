@@ -3,9 +3,9 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using Verse;
 using Harmony;
-using Prophesy.Meta;
+using Prophecy.Meta;
 
-namespace Prophesy.Stock
+namespace Prophecy.Stock
 {
     [StaticConstructorOnStartup]
     public static class ProTBin

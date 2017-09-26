@@ -1,5 +1,5 @@
-﻿using Prophesy.Meta;
-using Prophesy.Stock;
+﻿using Prophecy.Meta;
+using Prophecy.Stock;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using Verse;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
 	public class PNC_Card
 	{

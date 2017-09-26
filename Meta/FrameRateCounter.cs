@@ -3,7 +3,7 @@ using Verse;
 using System.Reflection;
 using Harmony;
 
-namespace Prophesy.Meta
+namespace Prophecy.Meta
 {
     [StaticConstructorOnStartup]
     public static class FrameRateCounter

@@ -2,7 +2,7 @@
 using UnityEngine;
 using System;
 
-namespace Prophesy.Meta
+namespace Prophecy.Meta
 {	
 	[StaticConstructorOnStartup]
 	public class ProphecySettings : ModSettings

@@ -8,7 +8,7 @@ using RimWorld;
 using System.IO;
 
 
-namespace Prophesy.Meta
+namespace Prophecy.Meta
 {
 	[StaticConstructorOnStartup]
 	public static class KrozzyUtilities

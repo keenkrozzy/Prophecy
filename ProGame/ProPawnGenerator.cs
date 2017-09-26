@@ -9,7 +9,7 @@ using Verse;
 using System.Reflection;
 using Harmony;
 
-namespace Prophesy.ProGame
+namespace Prophecy.ProGame
 {
 	class ProPawnGenerator
 	{
@@ -90,6 +90,9 @@ namespace Prophesy.ProGame
 			Pawn pawn = null;
 			if (!request.Newborn && !request.ForceGenerateNewPawn)
 			{
+				/*****Logging*****/
+				Log.Message("(!request.Newborn && !request.ForceGenerateNewPawn) true");
+				/*****Logging*****/
 				if (request.Inhabitant && request.Tile != -1)
 				{
 					Settlement settlement = Find.WorldObjects.WorldObjectAt<Settlement>(request.Tile);
@@ -118,6 +121,9 @@ namespace Prophesy.ProGame
 			// Starting Pawns
 			if (pawn == null)
 			{
+				/*****Logging*****/
+				Log.Message("(pawn == null) true");
+				/*****Logging*****/
 				pawn = GenerateNewNakedPawn(ref request);
 				if (pawn == null)
 				{
@@ -303,6 +309,9 @@ namespace Prophesy.ProGame
 				}
 				if (pawn.RaceProps.Humanlike)
 				{
+					/*****Logging*****/
+					Log.Message("(pawn.RaceProps.Humanlike) true. line 313");
+					/*****Logging*****/
 					pawn.story.melanin = ((!request.FixedMelanin.HasValue) ? PawnSkinColors.RandomMelanin() : request.FixedMelanin.Value);
 					pawn.story.crownType = ((Rand.Value >= 0.5f) ? CrownType.Narrow : CrownType.Average);
 					pawn.story.hairColor = PawnHairColors.RandomHairColor(pawn.story.SkinColor, pawn.ageTracker.AgeBiologicalYears);
@@ -444,7 +453,6 @@ namespace Prophesy.ProGame
 			int num = 0;
 			while (true)
 			{
-				//AgeInjuryUtility.GenerateRandomOldAgeInjuries(pawn, !request.AllowDead);
 				ProTraverses.travGenerateRandomOldAgeInjuries.GetValue();
 				PawnTechHediffsGenerator.GeneratePartsAndImplantsFor(pawn);
 				PawnAddictionHediffsGenerator.GenerateAddictionsAndTolerancesFor(pawn);

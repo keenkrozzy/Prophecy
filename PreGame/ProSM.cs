@@ -9,7 +9,7 @@ using Verse;
 using RimWorld;
 using Harmony;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
     public static class ProSM
     {

@@ -6,7 +6,7 @@ using System.Reflection;
 using Harmony;
 using Verse;
 
-namespace Prophesy.ProGame
+namespace Prophecy.ProGame
 {
 	public static class ProTraverses
 	{

@@ -8,9 +8,9 @@ using RimWorld;
 using Verse;
 using Verse.Profile;
 using UnityEngine;
-using Prophesy.Stock;
+using Prophecy.Stock;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
     [StaticConstructorOnStartup]
     internal static class ProUIBGMp

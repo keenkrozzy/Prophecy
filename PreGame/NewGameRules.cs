@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using Verse;
 using RimWorld;
+using Prophecy.ProGame.Elements;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
 	[StaticConstructorOnStartup]
 	public static class NewGameRules
@@ -18,6 +19,7 @@ namespace Prophesy.PreGame
 		public static string[] astrCurPawnPoints = new string[0];
 		private static float floBasePassionCost = 1f;
 		private static float floIncrementingReturn = .1f;
+
 
 		static NewGameRules()
 		{

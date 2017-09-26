@@ -5,7 +5,7 @@ using System.Text;
 using Verse;
 using RimWorld;
 
-namespace Prophesy.PreGame
+namespace Prophecy.PreGame
 {
 	public class ESItems
 	{
