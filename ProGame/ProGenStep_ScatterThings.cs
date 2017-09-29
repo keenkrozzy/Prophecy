@@ -6,7 +6,8 @@ using Verse;
 
 namespace Prophecy.ProGame
 {
-    public class ProGenStep_ScatterThings : GenStep_Scatterer
+	[StaticConstructorOnStartup]
+	public class ProGenStep_ScatterThings : GenStep_Scatterer
     {
         private const int ClusterRadius = 4;
 

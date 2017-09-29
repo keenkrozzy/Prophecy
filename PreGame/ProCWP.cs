@@ -11,7 +11,7 @@ using Harmony;
 
 namespace Prophecy.PreGame
 {
-    public class ProCWP : Page
+	public class ProCWP : Page
     {
 		/********************
 		* Create world page *
@@ -131,7 +131,7 @@ namespace Prophecy.PreGame
         public override void PostOpen()
         {
             base.PostOpen();
-            TutorSystem.Notify_Event("PageStart-CreateWorldParams");
+            //TutorSystem.Notify_Event("PageStart-CreateWorldParams");
         }
 
         public override void PreOpen()

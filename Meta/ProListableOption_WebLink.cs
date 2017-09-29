@@ -4,7 +4,7 @@ using Verse;
 
 namespace Prophecy.Meta
 {
-    public class ProListableOption_WebLink : ProListableOption
+	public class ProListableOption_WebLink : ProListableOption
     {
         public string URL;
         public Texture2D texture;

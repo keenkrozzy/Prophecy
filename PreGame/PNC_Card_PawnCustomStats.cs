@@ -67,7 +67,7 @@ namespace Prophecy.PreGame
 		{
 			if (Widgets.ButtonText(_rect, "Edit Backstory", true, true))
 			{
-				Messages.Message("The Edit Backstory process is under construction.", MessageSound.RejectInput);
+				Find.WindowStack.Add(new ProDialog_EditBackground(_pawn));
 			}
 		}
 
@@ -103,7 +103,21 @@ namespace Prophecy.PreGame
 			{
 				if (sr.TotallyDisabled != true)
 				{
-					floSkillsCost += NewGameRules.GetSkillCost(_pawn.ageTracker.AgeBiologicalYears, sr.levelInt);
+
+					int intSkillLevelOffset = 0;
+
+					foreach (Backstory bs in _pawn.story.AllBackstories)
+					{
+						foreach (KeyValuePair<SkillDef, int> kvp in bs.skillGainsResolved)
+						{
+							if (sr.def == kvp.Key && kvp.Value != 0)
+							{
+								intSkillLevelOffset += kvp.Value;
+							}
+						}
+					}
+
+					floSkillsCost += NewGameRules.GetSkillCost(_pawn.ageTracker.AgeBiologicalYears, sr.levelInt - intSkillLevelOffset);
 				}
 			}
 

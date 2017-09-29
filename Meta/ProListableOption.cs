@@ -4,7 +4,7 @@ using Verse;
 
 namespace Prophecy.Meta
 {
-    public class ProListableOption
+	public class ProListableOption
     {
         public string label;
         public Action action;

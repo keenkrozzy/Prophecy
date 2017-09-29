@@ -52,7 +52,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Meta\ModWindowHelper.cs" />
     <Compile Include="PreGame\ESApparel.cs" />
     <Compile Include="PreGame\ESDrugs.cs" />
     <Compile Include="PreGame\ESFoods.cs" />
@@ -67,7 +66,7 @@
     <Compile Include="PreGame\ProDialog_EditPassions.cs" />
     <Compile Include="PreGame\ProDialog_EditSkills.cs" />
     <Compile Include="PreGame\ProEquipmentShop.cs" />
-    <Compile Include="Meta\ProphecySettings.cs" />
+    <Compile Include="ProGame\ProBackstoryp.cs" />
     <Compile Include="ProGame\ProGenStep_ScatterThings.cs" />
     <Compile Include="ProGame\ProPawnBioAndNameGenerator.cs" />
     <Compile Include="ProGame\ProScenPart_ScatterThingsNearPlayerStart.cs" />

@@ -10,7 +10,7 @@ using Prophecy.ProGame;
 
 namespace Prophecy.PreGame
 {
-    public static class ESStartingItems
+	public static class ESStartingItems
     {
 		public static ESItem[] aStartingItems;
 

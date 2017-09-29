@@ -9,8 +9,8 @@ using RimWorld;
 
 namespace Prophecy.Meta
 {
-    // Attempting to make a dialogue box that can display FloatMenuOptions using code from FloatMenu
-    class ProDFMO : Window
+	// Attempting to make a dialogue box that can display FloatMenuOptions using code from FloatMenu
+	class ProDFMO : Window
     {
         /***************************
         * Dialog_MessageBox Fields * 

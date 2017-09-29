@@ -10,7 +10,7 @@ using Prophecy.ProGame;
 
 namespace Prophecy.PreGame
 {
-    public class ProEquipmentShop
+	public class ProEquipmentShop
     {
         /********************************/
         private float floMultiTax = 1.2f;

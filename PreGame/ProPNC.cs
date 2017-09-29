@@ -12,7 +12,7 @@ using Prophecy.Meta;
 
 namespace Prophecy.PreGame
 {
-    class ProPNC : Page
+	class ProPNC : Page
     {
 		/************************************
 		* Configure new player colony pawns *
@@ -128,10 +128,6 @@ namespace Prophecy.PreGame
         public ProPNC()
         {
         }
-
-        
-
-
 
         public override void DoWindowContents(Rect rect)
         {
@@ -544,7 +540,7 @@ namespace Prophecy.PreGame
 				}
 				yield break;
 			}
-			while (num < 4);
+			while (num < 3);
 		}
 
 

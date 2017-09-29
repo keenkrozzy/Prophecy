@@ -91,7 +91,7 @@ namespace Prophecy.ProGame
 			if (!request.Newborn && !request.ForceGenerateNewPawn)
 			{
 				/*****Logging*****/
-				Log.Message("(!request.Newborn && !request.ForceGenerateNewPawn) true");
+				//Log.Message("(!request.Newborn && !request.ForceGenerateNewPawn) true");
 				/*****Logging*****/
 				if (request.Inhabitant && request.Tile != -1)
 				{
@@ -122,7 +122,7 @@ namespace Prophecy.ProGame
 			if (pawn == null)
 			{
 				/*****Logging*****/
-				Log.Message("(pawn == null) true");
+				//Log.Message("(pawn == null) true");
 				/*****Logging*****/
 				pawn = GenerateNewNakedPawn(ref request);
 				if (pawn == null)
@@ -310,7 +310,7 @@ namespace Prophecy.ProGame
 				if (pawn.RaceProps.Humanlike)
 				{
 					/*****Logging*****/
-					Log.Message("(pawn.RaceProps.Humanlike) true. line 313");
+					//Log.Message("(pawn.RaceProps.Humanlike) true. line 313");
 					/*****Logging*****/
 					pawn.story.melanin = ((!request.FixedMelanin.HasValue) ? PawnSkinColors.RandomMelanin() : request.FixedMelanin.Value);
 					pawn.story.crownType = ((Rand.Value >= 0.5f) ? CrownType.Narrow : CrownType.Average);

@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Prophecy.PreGame
 {
-    public class ESFoods
+	public class ESFoods
     {
         public ESItem[] aFoods = new ESItem[0];
 		BiomeDef biome = new BiomeDef();

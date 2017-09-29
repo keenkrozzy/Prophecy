@@ -107,10 +107,23 @@ namespace Prophecy.PreGame
 
 			foreach (SkillRecord sk in aSKs)
 			{
+				int intSkillLevelOffset = 0;
+
+				foreach (Backstory bs in pawn.story.AllBackstories)
+				{
+					foreach (KeyValuePair<SkillDef, int> kvp in bs.skillGainsResolved)
+					{
+						if (sk.def == kvp.Key && kvp.Value != 0)
+						{
+							intSkillLevelOffset += kvp.Value;
+						}
+					}
+				}
+
 				w = Text.CalcSize(sk.def.skillLabel).x;
 				h = Text.CalcSize(sk.def.skillLabel).y;
 				string strPointsLabel = "Points: ";
-				string strPoints = String.Format("{0:0}", NewGameRules.GetSkillCost(pawn.ageTracker.AgeBiologicalYears, sk.Level));
+				string strPoints = String.Format("{0:0}", NewGameRules.GetSkillCost(pawn.ageTracker.AgeBiologicalYears, sk.Level - intSkillLevelOffset));
 
 				Rect rectSkillLabel = new Rect(x, y, w, h);
 				Rect rectDownButton = new Rect(floSkillsColumnRight, y, floAdjustButtonSize, floAdjustButtonSize);
@@ -125,19 +138,19 @@ namespace Prophecy.PreGame
 				{
 					if (GUI.Button(rectDownButton, "-", "button"))
 					{
-						if (sk.Level > 0 && sk.TotallyDisabled != true)
+						if (sk.Level - intSkillLevelOffset > 0 && sk.TotallyDisabled != true)
 						{
 							sk.Level--;
 							sk.xpSinceLastLevel = 0f;
 						}
 					}
 
-					GUI.Label(rectSkillLevel, sk.Level.ToString(), KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Normal, TextAnchor.MiddleCenter));
+					GUI.Label(rectSkillLevel, (sk.Level - intSkillLevelOffset).ToString(), KrozzyUtilities.BuildStyle(Fonts.Arial_small, Colors.White, FontStyle.Normal, TextAnchor.MiddleCenter));
 
 
 					if (GUI.Button(rectUpButton, "+", "button"))
 					{
-						if (sk.Level < 20 && sk.TotallyDisabled != true)
+						if (sk.Level - intSkillLevelOffset < 20 && sk.TotallyDisabled != true)
 						{
 							sk.Level++;
 							sk.xpSinceLastLevel = 0f;

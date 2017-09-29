@@ -11,7 +11,8 @@ using Harmony;
 
 namespace Prophecy.PreGame
 {
-    public static class ProSM
+	[StaticConstructorOnStartup]
+	public static class ProSM
     {
 		/****************
 		* Senario Maker *
@@ -39,7 +40,8 @@ namespace Prophecy.PreGame
 
             //Instantiate and inject player faction
             ScenPart_PlayerFaction f = new ScenPart_PlayerFaction();
-            Traverse.Create(f).Field("factionDef").SetValue(FactionDefOf.PlayerColony);
+			
+            Traverse.Create(f).Field("factionDef").SetValue(FactionDefOf.PlayerTribe);
             Traverse.Create(scen).Field("playerFaction").SetValue(f);
 
             // ***************** //

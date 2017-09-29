@@ -9,7 +9,7 @@ using Harmony;
 
 namespace Prophecy.PreGame
 {
-    public class ProSLS : Page
+	public class ProSLS : Page
     {
 		/***************************
 		* Select landing site page *

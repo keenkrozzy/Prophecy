@@ -6,7 +6,7 @@ using UnityEngine;
 using Verse;
 using RimWorld;
 using System.IO;
-
+using System.Diagnostics;
 
 namespace Prophecy.Meta
 {
@@ -15,7 +15,6 @@ namespace Prophecy.Meta
 	{
 		private static Font[] fontStyles = new Font[3];
 		private static Color[] colors = new Color[4];
-		
 
 		static KrozzyUtilities()
 		{
@@ -26,6 +25,8 @@ namespace Prophecy.Meta
 			colors[1] = Color.white;
 			colors[2] = Color.yellow;
 			colors[3] = Color.red;
+
+			//ReportProbablyMissingAttributes();
 		}
 
 		/// <summary>
@@ -111,7 +112,7 @@ namespace Prophecy.Meta
 
 		public static GUIStyle BuildStyle(Fonts _font, Colors _color, FontStyle _style = FontStyle.Normal, TextAnchor _textAnchor = TextAnchor.UpperLeft)
 		{
-			GUIStyle style = new GUIStyle() 
+			GUIStyle style = new GUIStyle()
 			{
 				font = fontStyles[(int)_font]
 			};
@@ -124,7 +125,7 @@ namespace Prophecy.Meta
 			return style;
 		}
 
-		public static GUIStyle BuildStyleButton(Fonts _font, Colors _color,  FontStyle _style = FontStyle.Normal, TextAnchor _textAnchor = TextAnchor.UpperLeft)
+		public static GUIStyle BuildStyleButton(Fonts _font, Colors _color, FontStyle _style = FontStyle.Normal, TextAnchor _textAnchor = TextAnchor.UpperLeft)
 		{
 			GUIStyle style = new GUIStyle() {
 				font = fontStyles[(int)_font]
@@ -137,6 +138,63 @@ namespace Prophecy.Meta
 
 			return style;
 		}
+
+		public static string GetCallForExceptionThisMethod(MethodBase methodBase, Exception e)
+		{
+			StackTrace trace = new StackTrace(e);
+			StackFrame previousFrame = null;
+
+			foreach (StackFrame frame in trace.GetFrames())
+			{
+				if (frame.GetMethod() == methodBase)
+				{
+					break;
+				}
+
+				previousFrame = frame;
+			}
+
+			if (previousFrame != null)
+			{
+				return previousFrame.GetMethod().Name;
+			}
+
+			return null;
+		}
+
+		//private static void ReportProbablyMissingAttributes()
+		//{
+		//	BindingFlags bindingAttr = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+		//	foreach (Type current in GenTypes.AllTypes)
+		//	{
+		//		if (!current.HasAttribute<StaticConstructorOnStartup>())
+		//		{
+					
+		//			FieldInfo fieldInfo = current.GetFields(bindingAttr).FirstOrDefault(delegate (FieldInfo x)
+		//			{
+		//				Type type = x.FieldType;
+		//				if (type.IsArray)
+		//				{
+		//					type = type.GetElementType();
+		//				}
+		//				return typeof(Texture).IsAssignableFrom(type) || typeof(Material).IsAssignableFrom(type) || typeof(Shader).IsAssignableFrom(type) || typeof(Graphic).IsAssignableFrom(type) || typeof(GameObject).IsAssignableFrom(type) || typeof(MaterialPropertyBlock).IsAssignableFrom(type);
+		//			});
+		//			if (fieldInfo != null)
+		//			{
+		//				Log.Warning(string.Concat(new string[]
+		//				{
+		//					"Type ",
+		//					current.Name, current.Namespace,
+		//					" probably needs a StaticConstructorOnStartup attribute, because it has a field ",
+		//					fieldInfo.Name,
+		//					" of type ",
+		//					fieldInfo.FieldType.Name,
+		//					". All assets must be loaded in the main thread. \n"
+		//				}));
+		//			}
+		//		}
+		//	}
+		//}
 
 
 	}

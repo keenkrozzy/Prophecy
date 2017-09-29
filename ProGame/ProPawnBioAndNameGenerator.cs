@@ -7,8 +7,11 @@ using Prophecy.ProGame.Elements;
 
 namespace Prophecy.ProGame
 {
+	[StaticConstructorOnStartup]
 	public static class ProPawnBioAndNameGenerator
 	{
+		private static ProBackstories ProBS;
+
 		private const float MinAgeForAdulthood = 20f;
 
 		private const float SolidBioChance = 0.25f;
@@ -20,6 +23,12 @@ namespace Prophecy.ProGame
 		private const float TryPreferredNameChance_Name = 0.5f;
 
 		private const float ShuffledNicknameChance = 0.15f;
+
+		static ProPawnBioAndNameGenerator()
+		{
+			ProBS = new ProBackstories();
+			
+		}
 
 		public static void GiveAppropriateBioAndNameTo(Pawn pawn, string requiredLastName)
 		{
@@ -50,24 +59,43 @@ namespace Prophecy.ProGame
 		{
 			try
 			{
-				if (slot == BackstorySlot.Childhood)
+				if (slot == BackstorySlot.Childhood && factionType == FactionDefOf.PlayerTribe)
 				{
-					if (!(from bs in ProBackstories.aBSChildNeo where bs.shuffleable && bs.spawnCategories.Contains(factionType.backstoryCategory) &&
-						  bs.slot == slot select bs).TryRandomElement(out backstory))
+					//if (!(from bs in ProBackstories.aBSChildNeo where bs.shuffleable && bs.spawnCategories.Contains(factionType.backstoryCategory) &&
+					//	  bs.slot == slot select bs).TryRandomElement(out backstory))
+					//{
+					//}
+					try
 					{
+						ProBS.GetNeoChildStory(ref backstory);
+					}
+					catch (Exception e)
+					{
+						Log.Message(string.Format("EXCEPTION! {0}.{1} \n\tMESSAGE: {2} \n\tException occurred calling {3} method", e.TargetSite.ReflectedType.Name,
+							e.TargetSite.Name, e.Message, Prophecy.Meta.KrozzyUtilities.GetCallForExceptionThisMethod(System.Reflection.MethodBase.GetCurrentMethod(), e)));
 					}
 				}
-				else
+				else if (slot == BackstorySlot.Adulthood && factionType == FactionDefOf.PlayerTribe)
 				{
-					if (!(from bs in ProBackstories.aBSAdultNeo where bs.shuffleable && bs.spawnCategories.Contains(factionType.backstoryCategory) &&
-						  bs.slot == slot && !bs.requiredWorkTags.OverlapsWithOnAnyWorkType(pawn.story.childhood.workDisables) select bs).TryRandomElement(out backstory))
+					//if (!(from bs in ProBackstories.aBSAdultNeo where bs.shuffleable && bs.spawnCategories.Contains(factionType.backstoryCategory) &&
+					//	  bs.slot == slot && !bs.requiredWorkTags.OverlapsWithOnAnyWorkType(pawn.story.childhood.workDisables) select bs).TryRandomElement(out backstory))
+					//{
+					//}
+					try
 					{
+						ProBS.GetNeoAdultStory(ref backstory);
+					}
+					catch (Exception e)
+					{
+						Log.Message(string.Format("EXCEPTION! {0}.{1} \n\tMESSAGE: {2} \n\tException occurred calling {3} method", e.TargetSite.ReflectedType.Name,
+							e.TargetSite.Name, e.Message, Prophecy.Meta.KrozzyUtilities.GetCallForExceptionThisMethod(System.Reflection.MethodBase.GetCurrentMethod(), e)));
+
 					}
 				}
 			}
-			catch
+			catch(Exception e)
 			{
-				Log.Message("ProPawnBioAndNameGenerator.SetBackstoryInSlot failed. Using Vanilla.");
+				Log.Message("ProPawnBioAndNameGenerator.SetBackstoryInSlot failed. Using Vanilla. \n " + e.Message + " \n" + e.InnerException.Message + " \n" + e.TargetSite.Name);
 
 				if (!(from kvp in BackstoryDatabase.allBackstories
 					  where kvp.Value.shuffleable && kvp.Value.spawnCategories.Contains(factionType.backstoryCategory) && kvp.Value.slot == slot && (slot != BackstorySlot.Adulthood || !kvp.Value.requiredWorkTags.OverlapsWithOnAnyWorkType(pawn.story.childhood.workDisables))

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Verse;
 using RimWorld;
-using Prophecy.ProGame.Elements;
 
 namespace Prophecy.PreGame
 {

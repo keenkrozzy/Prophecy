@@ -15,7 +15,6 @@ namespace Prophecy.PreGame
 		private const float TopButtonHeight = 35f;
 		private const float TopButtonWidth = 150f;
 		private Vector2 vecInitialSize = new Vector2(0f, 0f);
-		//private new Vector2 CloseButSize = new Vector2(120f, 40f);
 		private float floAdjustButtonSize = 0f;
 		private float floSkillsColumnRight = 0f;
 		private Pawn pawn;

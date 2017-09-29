@@ -8,6 +8,7 @@ using Verse;
 
 namespace Prophecy.ProGame
 {
+	[StaticConstructorOnStartup]
 	public static class ProTraverses
 	{
 		public static Traverse travGenerateRandomOldAgeInjuries;

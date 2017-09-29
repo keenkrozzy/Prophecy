@@ -5,7 +5,7 @@ using Verse;
 
 namespace Prophecy.Meta
 {
-    public static class ProOptionListingUtility
+	public static class ProOptionListingUtility
     {
         public static void ProDrawOptionListing(Rect _rect, List<ProListableOption> _optList, float _yPadding)
         {

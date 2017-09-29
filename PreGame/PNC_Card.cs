@@ -12,31 +12,28 @@ namespace Prophecy.PreGame
 {
 	public class PNC_Card
 	{
-		private Pawn pawn;
-		private Vector2 PawnPortraitSize = new Vector2(100f, 140f);
+		#region private fields
+			private Pawn pawn;
+			private Vector2 PawnPortraitSize = new Vector2(100f, 140f);
+			private int intNumCards;
+			private Regex validNameRegex = new Regex("^[a-zA-Z0-9 '\\-]*$");
+			private Vector2 v2BackgroundsScrollPosition = Vector2.zero;
+			private ColorInt cintBorder = new ColorInt(135, 135, 135);
+			private Texture2D[] atexTabs = new Texture2D[6] { ProTBin.texFoodsTab, ProTBin.texApparelTab, ProTBin.texWeaponsTab, ProTBin.texDrugsTab, ProTBin.texResourcesTab, ProTBin.texItemsTab };
+			private bool[] aboolCurTab = { true, false, false, false, false, false };
+			private string[] astrTabTooltip = { "Foods", "Apparel", "Weapons", "Drugs", "Resources", "Items" };
+			private Vector2 v2FoodsScrollPosition1 = Vector2.zero;
+			private Vector2 v2FoodsScrollPosition2 = Vector2.zero;
+			private int intCurSelectedToEquip = 0;
+			private int intCurSelectedToUnequip = 0;
+			private ESItem esItemCurSelectedToEquip = null;
+			private ESItem esItemCurSelectedToUnequip = null;
+			private ProEquipmentShop ES;
+			private PNC_Card_PawnCustomStats PCS;
+		#endregion
+
 		public Rect rectCard;
-		private int intNumCards;
-		//public int intCardPos;
 		public ePNC_Card_Type eCardType;
-		private Regex validNameRegex = new Regex("^[a-zA-Z0-9 '\\-]*$");
-		private Vector2 v2BackgroundsScrollPosition = Vector2.zero;
-		private ColorInt cintBorder = new ColorInt(135, 135, 135);
-		//private int intCurTab = 0;
-		private Texture2D[] atexTabs = new Texture2D[6] { ProTBin.texFoodsTab, ProTBin.texApparelTab, ProTBin.texWeaponsTab, ProTBin.texDrugsTab, ProTBin.texResourcesTab, ProTBin.texItemsTab };
-		private bool[] aboolCurTab = { true, false, false, false, false, false };
-		private string[] astrTabTooltip = { "Foods", "Apparel", "Weapons", "Drugs", "Resources", "Items" };
-		private Vector2 v2FoodsScrollPosition1 = Vector2.zero;
-		private Vector2 v2FoodsScrollPosition2 = Vector2.zero;
-		private int intCurSelectedToEquip = 0;
-        private int intCurSelectedToUnequip = 0;
-        private ESItem esItemCurSelectedToEquip = null;
-        //private int intCurSelectedAmountToEquip = 0;
-        //private float floCurSelectedPriceToEquip = 0f;
-        private ESItem esItemCurSelectedToUnequip = null;
-        //private int intCurSelectedAmountToUnequip = 0;
-        //private int intCurSelectedPriceToUnequip = 0;
-        private ProEquipmentShop ES;
-		private PNC_Card_PawnCustomStats PCS;
 
 
 		public PNC_Card(Pawn _pawn = null, int _intNumCards = 0)
@@ -57,9 +54,7 @@ namespace Prophecy.PreGame
 			intNumCards = _intNumCards; 
 		}
 
-		/**************
-		* Root Method *
-		**************/
+		#region Root Method
 		public void DrawCard(Rect _rect)
 		{
 			Widgets.DrawMenuSection(_rect, true);
@@ -87,13 +82,12 @@ namespace Prophecy.PreGame
             }
 
 			DoTotalCostLabel();
-
 		}
+		#endregion
 
-        /***********************************************************************************
-		* Method to only draw the top of the card if it is not the first card in the stack *
-		***********************************************************************************/
-        public void DrawCardTopOnly(Rect _rect)
+
+		#region Method to only draw the top of the card if it is not the first card in the stack 
+		public void DrawCardTopOnly(Rect _rect)
 		{
 			Widgets.DrawMenuSection(_rect, true);
 			rectCard = _rect;
@@ -102,6 +96,7 @@ namespace Prophecy.PreGame
             
 
         }
+		#endregion
 
 		private void DrawLabel(Rect _rect)
 		{
@@ -141,10 +136,8 @@ namespace Prophecy.PreGame
 			Text.Font = GameFont.Small;
 		}
 
-        /***************************************
-		* Method to handle the pawn's portrait *
-		***************************************/
-        private void DrawPawnPortrait()
+		#region  Method to handle the pawn's portrait
+		private void DrawPawnPortrait()
 		{
             // Shape the portrait
 			Rect rect = new Rect(rectCard.x + (rectCard.width * .85f), rectCard.y + (rectCard.height * .05f), PawnPortraitSize.x, PawnPortraitSize.y);
@@ -153,11 +146,10 @@ namespace Prophecy.PreGame
             // Draw the portrait
 			GUI.DrawTexture(rect, PortraitsCache.Get(pawn, PawnPortraitSize, vector3, 1f));
 		}
+		#endregion
 
-        /************************************************************
-		* Draw Name input text boxes with text set to current name. *
-		************************************************************/
-        private void DoNameInput()
+		#region Draw Name input text boxes with text set to current name
+		private void DoNameInput()
 		{
 			NameTriple nameTriple = pawn.Name as NameTriple;
 			string first = nameTriple.First;
@@ -194,6 +186,7 @@ namespace Prophecy.PreGame
 			TooltipHandler.TipRegion(KrozzyUtilities.RectAddition(rect, rectOffset), "ShortIdentifierDesc".Translate());
 			TooltipHandler.TipRegion(KrozzyUtilities.RectAddition(KrozzyUtilities.RectAddition(rect, rectOffset), rectOffset), "LastNameDesc".Translate());
 		}
+		#endregion
 
 		private void DoMainDesc()
 		{
@@ -221,7 +214,7 @@ namespace Prophecy.PreGame
 			Vector2 v2BSChildhood = Text.CalcSize(strBSChildhood);
 			string strBSChildhoodTitle = pawn.story.GetBackstory(BackstorySlot.Childhood).Title;
 			Vector2 v2BSChildhoodTitle = Text.CalcSize(strBSChildhoodTitle);
-			string strBSChildhoodDesc = pawn.story.GetBackstory(BackstorySlot.Childhood).FullDescriptionFor(pawn);		
+			string strBSChildhoodDesc = pawn.story.GetBackstory(BackstorySlot.Childhood).FullDescriptionFor(pawn);
 			float floBSChildhoodDesc = Text.CalcHeight(strBSChildhoodDesc, floBSwidth -16f); // Scrollbar has 16f hard number
 
 			string strBSAdulthood = "";
@@ -339,7 +332,36 @@ namespace Prophecy.PreGame
 						Texture2D texPassionOverlay = (pawn.skills.skills[j].passion != Passion.Major) ? ProTBin.texSkillBarFillMinorPassion : ProTBin.texSkillBarFillMajorPassion;
 						Widgets.FillableBar(KrozzyUtilities.RectAddition(rectSkillBar, rectCard), fillPercent, texPassionOverlay, null, false);
 					}
-					Widgets.Label(KrozzyUtilities.RectAddition(rectSkillBar, rectCard), pawn.skills.skills[j].Level.ToString());
+
+					int intSkillLevelOffset = 0;
+
+					foreach (Backstory bs in pawn.story.AllBackstories)
+					{
+						foreach (KeyValuePair<SkillDef,int> kvp in bs.skillGainsResolved)
+						{
+							if (pawn.skills.skills[j].def == kvp.Key && kvp.Value != 0)
+							{
+								intSkillLevelOffset += kvp.Value;
+							}
+						}
+					}
+
+					string strSkillLevelOffset = "";
+
+					if (intSkillLevelOffset != 0)
+					{
+						if (intSkillLevelOffset > 0)
+						{
+							strSkillLevelOffset = string.Format("+{0}", intSkillLevelOffset.ToString());
+						}
+						else
+						{
+							strSkillLevelOffset = intSkillLevelOffset.ToString();
+						}
+					}
+					string strLevel = string.Format("{0} {1}", (pawn.skills.skills[j].Level - intSkillLevelOffset).ToString(), strSkillLevelOffset);
+
+					Widgets.Label(KrozzyUtilities.RectAddition(rectSkillBar, rectCard), strLevel);
 				}
 
 				floAdjustY += floTextHeight;

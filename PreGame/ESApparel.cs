@@ -7,7 +7,7 @@ using RimWorld;
 
 namespace Prophecy.PreGame
 {
-    public class ESApparel
+	public class ESApparel
     {
         public ESItem[] aApparel = new ESItem[0];
 		BiomeDef biome = new BiomeDef();

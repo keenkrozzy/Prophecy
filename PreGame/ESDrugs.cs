@@ -41,9 +41,6 @@ namespace Prophecy.PreGame
 
 			aESI = aESI.Concat(new ESItem[] { new ESItem(_ItemType.defName, 1, floBasePrice) }).ToArray();
 
-
-
-
 			return aESI;
 		}
 	}

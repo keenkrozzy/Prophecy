@@ -6,7 +6,8 @@ using Verse;
 
 namespace Prophecy.ProGame
 {
-    public class ProScenPart_ScatterThingsNearPlayerStart : ScenPart_ScatterThings
+	[StaticConstructorOnStartup]
+	public class ProScenPart_ScatterThingsNearPlayerStart : ScenPart_ScatterThings
     {
         protected int radius = 4;
 
