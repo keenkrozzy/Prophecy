@@ -612,7 +612,7 @@ namespace Prophecy.PreGame
 				if (Mouse.IsOver(rectWholeItem))
 				{
 					KrozzyUtilities.Tooltip(KrozzyUtilities.RectAddition(rectScrollingTooltip, Find.WindowStack.currentlyDrawnWindow.windowRect), strDescToolTip);
-                    Widgets.DrawHighlight(rectWholeItem);                    
+                    Widgets.DrawHighlight(rectWholeItem);
 				}
 
                 // Draw invisible button for item selecting
