@@ -15,6 +15,9 @@ namespace Prophecy.PreGame
 
 		public ESItems()
 		{
+			aItemTDs = aItemTDs.Where(x => x != ThingDef.Named("MortarShell") && x != ThingDef.Named("AIPersonaCore") && x != ThingDef.Named("Neurotrainer") &&
+						x != ThingDef.Named("Component") && x != ThingDef.Named("Neutroamine") && x != ThingDef.Named("Chemfuel")).ToArray();
+
 			foreach (ThingDef td in aItemTDs)
 			{
 				aItems = aItems.Concat(GetItems(td)).ToArray();
@@ -27,8 +30,20 @@ namespace Prophecy.PreGame
 			ESItem[] aESI = new ESItem[0];
 			string strThingDef = _ItemType.defName;
 			float floBasePrice = _ItemType.BaseMarketValue;
-			
-			aESI = aESI.Concat(new ESItem[] { new ESItem(_ItemType.defName,1, floBasePrice) }).ToArray();
+
+			int intAmount = 0;
+
+			switch (strThingDef)
+			{
+				case "Wort":
+					intAmount = 5;
+					break;
+				default:
+					intAmount = 1;
+					break;
+			}
+
+			aESI = aESI.Concat(new ESItem[] { new ESItem(_ItemType.defName, intAmount, floBasePrice * intAmount) }).ToArray();
 
 			return aESI;
 		}

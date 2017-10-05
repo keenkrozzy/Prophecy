@@ -20,23 +20,12 @@ namespace Prophecy.PreGame
 		
         public float floTotalItemsPrice = 0f;
 
-		//public ESStartingItems StartingItems;
 		public ESFoods Foods;
 		public ESApparel Apparel;
 		public ESWeapons Weapons;
 		public ESDrugs Drugs;
 		public ESResources Resources;
 		public ESItems Items;
-
-		//public ThingDef[] aApparelDefs = ThingCategoryDefOf.Apparel.DescendantThingDefs.ToArray();
-  //      public ThingDef[] aWeaponsDefs = ThingCategoryDefOf.Weapons.DescendantThingDefs.ToArray();
-  //      public ThingDef[] aDrugsDefs = 
-  //          ThingCategoryDefOf.Drugs.DescendantThingDefs.Concat(
-  //              ThingCategoryDefOf.Medicine.DescendantThingDefs).ToArray();
-  //      public ThingDef[] aResourcesRawDefs = ThingCategoryDefOf.ResourcesRaw.DescendantThingDefs.Concat(
-  //          ThingCategoryDefOf.Leathers.DescendantThingDefs).ToArray();
-  //      public ThingDef[] aItemsDefs = ThingCategoryDefOf.Art.DescendantThingDefs.Concat(
-  //          ThingCategoryDefOf.Items.childThingDefs).ToArray();
 
 		public ProEquipmentShop()
 		{
@@ -46,8 +35,8 @@ namespace Prophecy.PreGame
 			Foods = new ESFoods(startingBiome);
 			Apparel = new ESApparel(startingBiome);
 			Weapons = new ESWeapons();
-			Drugs = new ESDrugs();
-			Resources = new ESResources();
+			Drugs = new ESDrugs(startingBiome);
+			Resources = new ESResources(startingBiome);
 			Items = new ESItems();
 
 		}
@@ -65,7 +54,7 @@ namespace Prophecy.PreGame
 			}
 			else
 			{
-				esi = new ESItem(_item.thingDef.ToString(), _item.thingAmount, _item.basePrice, _item.stuff.ToString());
+				esi = new ESItem(_item.thingDef.ToString(), _item.thingAmount, _item.basePrice, 1, _item.stuff.ToString());
 			}
 
 			if (ESStartingItems.aStartingItems.Any(x => x.thing.Label == esi.thing.Label))
@@ -95,7 +84,7 @@ namespace Prophecy.PreGame
 			}
 			else
 			{
-				esi = new ESItem(_item.thingDef.ToString(), _item.thingAmount, _item.basePrice, _item.stuff.ToString())
+				esi = new ESItem(_item.thingDef.ToString(), _item.thingAmount, _item.basePrice, 1, _item.stuff.ToString())
 				{
 					price = _item.price
 				};
@@ -119,11 +108,13 @@ namespace Prophecy.PreGame
         {
             float floPrice = _item.price;
             int intItemCount = 0;
+			int intThingCount = 0;
 
             if (ESStartingItems.aStartingItems.Any(x => x.thing.Label == _item.thing.Label))
             {
                 intItemCount = ESStartingItems.aStartingItems.FirstOrDefault(x => x.thing.Label == _item.thing.Label).itemAmount;
-            }
+				intThingCount = ESStartingItems.aStartingItems.FirstOrDefault(x => x.thing.Label == _item.thing.Label).thingAmount;
+			}
 
             for (int i = 0; i < intItemCount; i++)
             {
@@ -137,11 +128,13 @@ namespace Prophecy.PreGame
         {
             float floPrice = _item.basePrice;
             int intItemCount = 0;
+			int intThingCount = 0;
 
-            if (ESStartingItems.aStartingItems.Any(x => x.thing.Label == _item.thing.Label))
+			if (ESStartingItems.aStartingItems.Any(x => x.thing.Label == _item.thing.Label))
             {
                 intItemCount = ESStartingItems.aStartingItems.FirstOrDefault(x => x.thing.Label == _item.thing.Label).itemAmount -1;
-            }
+				intThingCount = ESStartingItems.aStartingItems.FirstOrDefault(x => x.thing.Label == _item.thing.Label).thingAmount;
+			}
 
             for (int i = 0; i < intItemCount; i++)
             {

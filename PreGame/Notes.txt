@@ -71,3 +71,178 @@ Rat			1			0.7					0.15			1
 (commonality * baseBodySize) / danger = LeatherCommonality
 leatherInsulation / LeatherCommonality = LeatherCost
 		
+Name: MealSimple    Category: Item    ThingCategoryDefs: FoodMeals, 
+Name: MealFine    Category: Item    ThingCategoryDefs: FoodMeals, 
+Name: Pemmican    Category: Item    ThingCategoryDefs: Foods, 
+Name: Kibble    Category: Item    ThingCategoryDefs: Foods, 
+Name: Hay    Category: Item    ThingCategoryDefs: Foods, 
+Name: RawBerries    Category: Item    ThingCategoryDefs: PlantFoodRaw, 
+Name: RawPotatoes    Category: Item    ThingCategoryDefs: PlantFoodRaw, 
+Name: RawCorn    Category: Item    ThingCategoryDefs: PlantFoodRaw, 
+Name: RawRice    Category: Item    ThingCategoryDefs: PlantFoodRaw, 
+Name: Milk    Category: Item    ThingCategoryDefs: AnimalProductRaw, 
+Name: EggChickenUnfertilized    Category: Item    ThingCategoryDefs: EggsUnfertilized, 
+Name: InsectJelly    Category: Item    ThingCategoryDefs: AnimalProductRaw, 
+
+defName				animalDensity			plantDensity
+AridShrubland		1.3 (.7)					0.16 (.4)
+Desert				0.25 (.4)					0.05 (.3)
+ExtremeDesert		0.05 (.1)					0.002 (.2)
+BorealForest		1.9	(.7)					0.30 (.5)
+Tundra				0.8	(.8)					0.14 (.2)
+IceSheet			0.1	(.2)					0 (.1)
+SeaIce				0.05 (.1)					0 (.1)
+TemperateForest		2.8	(.8)					0.55 (.6)
+TropicalRainforest	4.0	(1)					    0.85 (.8)
+
+ANIMALS
+IceSheet			1.9
+ExtremeDesert		1.9
+SeaIce				1.8
+Desert				1.7
+Tundra				1.6
+AridShrubland		1.3
+BorealForest		1.2
+TemperateForest		1.1
+TropicalRainforest	1
+
+PLANTS
+IceSheet			1.9
+SeaIce				1.9
+ExtremeDesert		1.9
+Tundra				1.8
+Desert				1.7
+AridShrubland		1.4
+BorealForest		1.3
+TemperateForest		1.2
+TropicalRainforest	1
+
+NAME                          NUTRITION   PREFERENCE          DAYSTOROT   OLD     NEW     
+Beer                          0.08        NeverForNutrition   n/a         12.00   23.13   
+Ambrosia                      0.2         RawTasty            30          15.00   29.69   
+MealSurvivalPack              0.9         MealSimple          n/a         25.00   34.75   
+MealNutrientPaste             0.9         MealAwful           4           12.00   1.68    
+MealSimple                    0.9         MealSimple          4           18.00   2.35    
+MealFine                      0.9         MealFine            4           24.00   3.70    
+MealLavish                    1           MealLavish          4           30.00   5.50    
+Kibble                        0.05        RawBad              n/a         1.30    2.88    
+Pemmican                      0.05        MealSimple          80          1.50    2.50    
+Chocolate                     0.1         DesperateOnly       n/a         6.00    4.75    
+Milk                          0.05        RawTasty            14          3.10    1.39    
+InsectJelly                   0.05        MealFine            n/a         8.00    22.75   
+EggChickenUnfertilized        0.25        RawBad              15          7.00    2.41    
+EggChickenFertilized          0.25        DesperateOnly       n/a         7.00    999.00  
+EggCobraFertilized            0.25        DesperateOnly       n/a         40.00   999.00  
+EggIguanaFertilized           0.25        DesperateOnly       n/a         25.00   999.00  
+EggTortoiseFertilized         0.25        DesperateOnly       n/a         23.00   999.00  
+EggCassowaryFertilized        0.25        DesperateOnly       n/a         19.00   999.00  
+EggEmuFertilized              0.25        DesperateOnly       n/a         18.00   999.00  
+EggOstrichFertilized          0.25        DesperateOnly       n/a         23.00   999.00  
+EggTurkeyFertilized           0.25        DesperateOnly       n/a         11.00   999.00  
+RawPotatoes                   0.05        RawBad              30          1.50    1.56    
+RawRice                       0.05        RawBad              40          1.50    1.75    
+RawAgave                      0.05        RawBad              25          1.50    1.47    
+RawCorn                       0.05        RawBad              60          1.50    2.13    
+RawBerries                    0.05        RawTasty            14          2.00    1.39    
+Hay                           0.05        DesperateOnly       60          0.90    1.28    
+RawHops                       0.05        DesperateOnly       30          1.50    1.28    
+PsychoidLeaves                0.05        DesperateOnly       30          2.20    1.70    
+SmokeleafLeaves               0.05        DesperateOnly       30          2.00    1.42    
+Muffalo_Meat                  0.05        RawBad              2           2.00    1.08    
+Gazelle_Meat                  0.05        RawBad              2           2.00    1.08    
+Iguana_Meat                   0.05        RawBad              2           2.00    1.08    
+Rhinoceros_Meat               0.05        RawBad              2           2.00    1.08    
+Dromedary_Meat                0.05        RawBad              2           2.00    1.08    
+GrizzlyBear_Meat              0.05        RawBad              2           2.00    1.08    
+Cougar_Meat                   0.05        RawBad              2           2.00    1.08    
+Panther_Meat                  0.05        RawBad              2           2.00    1.08    
+Lynx_Meat                     0.05        RawBad              2           2.00    1.08    
+Cassowary_Meat                0.05        RawBad              2           2.00    1.08    
+Turkey_Meat                   0.05        RawBad              2           2.00    1.08    
+Chicken_Meat                  0.05        RawBad              2           2.00    1.08    
+Pig_Meat                      0.05        RawBad              2           2.00    1.08    
+Cow_Meat                      0.05        RawBad              2           2.00    1.08    
+Alpaca_Meat                   0.05        RawBad              2           2.00    1.08    
+Elephant_Meat                 0.05        RawBad              2           2.00    1.08    
+Megasloth_Meat                0.05        RawBad              2           2.00    1.08    
+Thrumbo_Meat                  0.05        RawBad              2           2.00    1.08    
+Hare_Meat                     0.05        RawBad              2           2.00    1.08    
+Megaspider_Meat               0.05        RawBad              2           2.00    1.08    
+YorkshireTerrier_Meat         0.05        RawBad              2           2.00    1.08    
+Husky_Meat                    0.05        RawBad              2           2.00    1.08    
+LabradorRetriever_Meat        0.05        RawBad              2           2.00    1.08    
+Cat_Meat                      0.05        RawBad              2           2.00    1.08    
+Squirrel_Meat                 0.05        RawBad              2           2.00    1.08    
+Alphabeaver_Meat              0.05        RawBad              2           2.00    1.08    
+Capybara_Meat                 0.05        RawBad              2           2.00    1.08    
+Chinchilla_Meat               0.05        RawBad              2           2.00    1.08    
+Boomrat_Meat                  0.05        RawBad              2           2.00    1.08    
+Raccoon_Meat                  0.05        RawBad              2           2.00    1.08    
+Rat_Meat                      0.05        RawBad              2           2.00    1.08    
+Deer_Meat                     0.05        RawBad              2           2.00    1.08    
+Ibex_Meat                     0.05        RawBad              2           2.00    1.08    
+Elk_Meat                      0.05        RawBad              2           2.00    1.08    
+Caribou_Meat                  0.05        RawBad              2           2.00    1.08    
+Tortoise_Meat                 0.05        RawBad              2           2.00    1.08    
+Cobra_Meat                    0.05        RawBad              2           2.00    1.08    
+Monkey_Meat                   0.05        RawBad              2           2.00    1.08    
+Boomalope_Meat                0.05        RawBad              2           2.00    1.08    
+Warg_Meat                     0.05        RawBad              2           2.00    1.08    
+WolfTimber_Meat               0.05        RawBad              2           2.00    1.08    
+FoxFennec_Meat                0.05        RawBad              2           2.00    1.08    
+Human_Meat                    0.05        RawBad              2           0.80    1.08    
+Muffalo_Corpse                1           DesperateOnly       2.5         0.00    1.38    
+Gazelle_Corpse                1           DesperateOnly       2.5         0.00    1.38    
+Iguana_Corpse                 1           DesperateOnly       2.5         0.00    1.38    
+Rhinoceros_Corpse             1           DesperateOnly       2.5         0.00    1.38    
+Dromedary_Corpse              1           DesperateOnly       2.5         0.00    1.38    
+GrizzlyBear_Corpse            1           DesperateOnly       2.5         0.00    1.38    
+PolarBear_Corpse              1           DesperateOnly       2.5         0.00    1.38    
+Cougar_Corpse                 1           DesperateOnly       2.5         0.00    1.38    
+Panther_Corpse                1           DesperateOnly       2.5         0.00    1.38    
+Lynx_Corpse                   1           DesperateOnly       2.5         0.00    1.38    
+Cassowary_Corpse              1           DesperateOnly       2.5         0.00    1.38    
+Emu_Corpse                    1           DesperateOnly       2.5         0.00    1.38    
+Ostrich_Corpse                1           DesperateOnly       2.5         0.00    1.38    
+Turkey_Corpse                 1           DesperateOnly       2.5         0.00    1.38    
+Chicken_Corpse                1           DesperateOnly       2.5         0.00    1.38    
+Pig_Corpse                    1           DesperateOnly       2.5         0.00    1.38    
+Cow_Corpse                    1           DesperateOnly       2.5         0.00    1.38    
+Alpaca_Corpse                 1           DesperateOnly       2.5         0.00    1.38    
+Elephant_Corpse               1           DesperateOnly       2.5         0.00    1.38    
+Megasloth_Corpse              1           DesperateOnly       2.5         0.00    1.38    
+Thrumbo_Corpse                1           DesperateOnly       2.5         0.00    1.38    
+Hare_Corpse                   1           DesperateOnly       2.5         0.00    1.38    
+Snowhare_Corpse               1           DesperateOnly       2.5         0.00    1.38    
+Megascarab_Corpse             1           DesperateOnly       2.5         0.00    1.38    
+Spelopede_Corpse              1           DesperateOnly       2.5         0.00    1.38    
+Megaspider_Corpse             1           DesperateOnly       2.5         0.00    1.38    
+YorkshireTerrier_Corpse       1           DesperateOnly       2.5         0.00    1.38    
+Husky_Corpse                  1           DesperateOnly       2.5         0.00    1.38    
+LabradorRetriever_Corpse      1           DesperateOnly       2.5         0.00    1.38    
+Cat_Corpse                    1           DesperateOnly       2.5         0.00    1.38    
+Squirrel_Corpse               1           DesperateOnly       2.5         0.00    1.38    
+Alphabeaver_Corpse            1           DesperateOnly       2.5         0.00    1.38    
+Capybara_Corpse               1           DesperateOnly       2.5         0.00    1.38    
+Chinchilla_Corpse             1           DesperateOnly       2.5         0.00    1.38    
+Boomrat_Corpse                1           DesperateOnly       2.5         0.00    1.38    
+Raccoon_Corpse                1           DesperateOnly       2.5         0.00    1.38    
+Rat_Corpse                    1           DesperateOnly       2.5         0.00    1.38    
+Deer_Corpse                   1           DesperateOnly       2.5         0.00    1.38    
+Ibex_Corpse                   1           DesperateOnly       2.5         0.00    1.38    
+Elk_Corpse                    1           DesperateOnly       2.5         0.00    1.38    
+Caribou_Corpse                1           DesperateOnly       2.5         0.00    1.38    
+WildBoar_Corpse               1           DesperateOnly       2.5         0.00    1.38    
+Tortoise_Corpse               1           DesperateOnly       2.5         0.00    1.38    
+Cobra_Corpse                  1           DesperateOnly       2.5         0.00    1.38    
+Monkey_Corpse                 1           DesperateOnly       2.5         0.00    1.38    
+Boomalope_Corpse              1           DesperateOnly       2.5         0.00    1.38    
+Warg_Corpse                   1           DesperateOnly       2.5         0.00    1.38    
+WolfTimber_Corpse             1           DesperateOnly       2.5         0.00    1.38    
+WolfArctic_Corpse             1           DesperateOnly       2.5         0.00    1.38    
+FoxFennec_Corpse              1           DesperateOnly       2.5         0.00    1.38    
+FoxRed_Corpse                 1           DesperateOnly       2.5         0.00    1.38    
+FoxArctic_Corpse              1           DesperateOnly       2.5         0.00    1.38    
+Human_Corpse                  1           DesperateOnly       2.5         0.00    1.38    
+Mechanoid_Centipede_Corpse    1           DesperateOnly       n/a         0.00    10.38   
+Mechanoid_Scyther_Corpse      1           DesperateOnly       n/a         0.00    10.38   

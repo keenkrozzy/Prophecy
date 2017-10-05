@@ -62,7 +62,7 @@ namespace Prophecy.PreGame
 			{
 				float price = _WeaponType.BaseMarketValue + ((float)_WeaponType.costStuffCount * floStuffBasePrice);
 				//Log.Message(_Stuff.defName);
-				ESI = new ESItem(_WeaponType.defName, 1, price, _Stuff.defName);
+				ESI = new ESItem(_WeaponType.defName, 1, price, 1, _Stuff.defName);
 			}
 			else if (_WeaponType.costList != null)
 			{

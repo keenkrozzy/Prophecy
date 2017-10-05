@@ -16,51 +16,174 @@ namespace Prophecy.PreGame
 
 		public ESFoods(BiomeDef _biome)
 		{
-			aFoods = aFoods.Concat(new ESItem[] { new ESItem("MealSimple",1,9f), new ESItem("MealFine",1,11f)}).ToArray();
+			ThingDef[] aTDs = (from k in DefDatabase<ThingDef>.AllDefs.Where(x => x.thingCategories != null && (x.thingCategories.Any(y => y.defName == "FoodMeals") 
+							   || x.thingCategories.Any(y => y.defName == "Foods") || x.thingCategories.Any(y => y.defName == "PlantFoodRaw") 
+							   || x.thingCategories.Any(y => y.defName == "AnimalProductRaw") || x.thingCategories.Any(y => y.defName == "EggsUnfertilized"))) select k).ToArray();
 
-			biome = _biome;
-			switch (biome.defName)
+			foreach (ThingDef td in aTDs)
 			{
-				case "AridShrubland":
-					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 10, 10f), new ESItem("Kibble", 10, 5f), new ESItem("Hay", 10, 4f),
-					new ESItem("RawBerries",5,25f), new ESItem("RawPotatoes",5,25f), new ESItem("RawCorn",5,25f), new ESItem("RawRice",5,25f),
-					new ESItem("Milk",10,5f), new ESItem("EggChickenUnfertilized",1,3f), new ESItem("InsectJelly",1,5f)}).ToArray();
+				if (td.defName != "MealNutrientPaste" && td.defName != "MealLavish" && td.defName != "MealSurvivalPack" && td.defName != "Chocolate")
+				{
+					aFoods = aFoods.Concat(GetItems(td, _biome)).ToArray();
+				}
+				
+			}
+		}
+
+		private ESItem[] GetItems(ThingDef _ItemType, BiomeDef _biome)
+		{
+			// Variables	
+			ESItem[] aESI = new ESItem[0];
+			string strThingDef = _ItemType.defName;
+			float floBasePrice = 0;
+			int intAmount = 0;
+
+			switch (strThingDef)
+			{
+				case "MealSimple":
+					intAmount = 5;
+					floBasePrice = _ItemType.BaseMarketValue * GetAnimalPriceInflate(_biome) * GetPlantPriceInflate(_biome);
 					break;
-				case "Desert":
-					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 10, 12f), new ESItem("Kibble", 10, 6f), new ESItem("Hay", 10, 5f),
-					new ESItem("RawBerries",1,6f), new ESItem("RawPotatoes",1,6f), new ESItem("RawCorn",1,6f), new ESItem("RawRice",1,6f), new ESItem("RawAgave",1,5f),
-					new ESItem("Milk",10,6f), new ESItem("EggChickenUnfertilized",1,4f), new ESItem("InsectJelly",1,5f)}).ToArray();
+				case "MealFine":
+					intAmount = 1;
+					floBasePrice = _ItemType.BaseMarketValue * GetAnimalPriceInflate(_biome) * GetPlantPriceInflate(_biome);
 					break;
-				case "ExtremeDesert":
-					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 10, 12f), new ESItem("Kibble", 12, 5f), new ESItem("RawAgave", 1, 5f), new ESItem("InsectJelly", 1, 5f) }).ToArray();
+				case "EggChickenUnfertilized":
+					intAmount = 5;
+					floBasePrice = _ItemType.BaseMarketValue * GetAnimalPriceInflate(_biome);
 					break;
-				case "TemperateForest":
-					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 10, 10f), new ESItem("Kibble", 10, 5f), new ESItem("Hay", 10, 4f),
-					new ESItem("RawBerries",1,5f), new ESItem("RawPotatoes",1,5f), new ESItem("RawCorn",1,5f), new ESItem("RawRice",1,5f),
-					new ESItem("Milk",10,5f), new ESItem("EggChickenUnfertilized",1,3f), new ESItem("InsectJelly",1,5f)}).ToArray();
+				case "InsectJelly":
+					intAmount = 1;
+					floBasePrice = _ItemType.BaseMarketValue * GetAnimalPriceInflate(_biome);
 					break;
-				case "TropicalRainforest":
-					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 10, 10f), new ESItem("Kibble", 10, 5f), new ESItem("Hay", 10, 4f),
-					new ESItem("RawBerries",1,5f), new ESItem("RawPotatoes",1,5f), new ESItem("RawCorn",1,5f), new ESItem("RawRice",1,5f),
-					new ESItem("Milk",10,5f), new ESItem("EggChickenUnfertilized",1,3f), new ESItem("InsectJelly",1,5f)}).ToArray();
+				case "Pemmican":
+					intAmount = 10;
+					floBasePrice = _ItemType.BaseMarketValue * GetAnimalPriceInflate(_biome) * GetPlantPriceInflate(_biome);
 					break;
-				case "BorealForest":
-					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 10, 10f), new ESItem("Kibble", 10, 5f), new ESItem("Hay", 10, 4f),
-					new ESItem("RawBerries",1,5f), new ESItem("RawPotatoes",1,5f), new ESItem("RawCorn",1,5f), new ESItem("RawRice",1,5f),
-					new ESItem("Milk",10,5f), new ESItem("EggChickenUnfertilized",1,3f), new ESItem("InsectJelly",1,5f)}).ToArray();
+				case "Milk":
+					intAmount = 10;
+					floBasePrice = _ItemType.BaseMarketValue * GetAnimalPriceInflate(_biome);
 					break;
-				case "Tundra":
-					aFoods = aFoods.Concat(new ESItem[] { new ESItem("Pemmican", 12, 10f), new ESItem("Kibble", 12, 5f), new ESItem("Hay", 10, 5f),
-					new ESItem("RawBerries",1,6f), new ESItem("RawPotatoes",1,6f), new ESItem("RawCorn",1,6f),
-					new ESItem("Milk",10,6f), new ESItem("EggChickenUnfertilized",1,4f), new ESItem("InsectJelly",1,5f)}).ToArray();
+				case "RawAgave":
+					if (_biome != BiomeDefOf.Desert && _biome != BiomeDefOf.AridShrubland && _biome.defName != "ExtremeDesert")
+					{
+						floBasePrice = _ItemType.BaseMarketValue * GetPlantPriceInflate(_biome) * 3f;
+					}
+					else
+					{
+						floBasePrice = _ItemType.BaseMarketValue * GetPlantPriceInflate(_biome);
+					}
+					intAmount = 10;
 					break;
-				case "IceSheet":
-					aFoods = aFoods.Concat(new ESItem[] { }).ToArray();
+				case "RawBerries":
+					if (_biome != BiomeDefOf.Desert && _biome.defName != "ExtremeDesert")
+					{
+						floBasePrice = _ItemType.BaseMarketValue * GetPlantPriceInflate(_biome);
+					}
+					else
+					{
+						floBasePrice = _ItemType.BaseMarketValue * GetPlantPriceInflate(_biome) *1.5f;
+					}
+					intAmount = 10;
 					break;
-				case "SeaIce":
-					aFoods = aFoods.Concat(new ESItem[] { }).ToArray();
+				default:
+					floBasePrice = _ItemType.BaseMarketValue * GetPlantPriceInflate(_biome);
+					intAmount = 10;
 					break;
 			}
+
+			aESI = aESI.Concat(new ESItem[] { new ESItem(_ItemType.defName, intAmount, floBasePrice * intAmount) }).ToArray();
+
+			return aESI;
+		}
+
+		private float GetAnimalPriceInflate(BiomeDef _biome)
+		{
+			switch (_biome.defName)
+			{
+				case "IceSheet":
+					return 1.9f;
+				case "ExtremeDesert":
+					return 1.9f;
+				case "SeaIce":
+					return 1.8f;
+				case "Desert":
+					return 1.7f;
+				case "Tundra":
+					return 1.6f;
+				case "AridShrubland":
+					return 1.3f;
+				case "BorealForest":
+					return 1.2f;
+				case "TemperateForest":
+					return 1.1f;
+				case "TropicalRainforest":
+					return 1f;
+				default:
+					return 1.9f;
+			}
+		}
+
+		private float GetPlantPriceInflate(BiomeDef _biome)
+		{
+			switch (_biome.defName)
+			{
+				case "IceSheet":
+					return 1.9f;
+				case "ExtremeDesert":
+					return 1.9f;
+				case "SeaIce":
+					return 1.9f;
+				case "Desert":
+					return 1.7f;
+				case "Tundra":
+					return 1.8f;
+				case "AridShrubland":
+					return 1.4f;
+				case "BorealForest":
+					return 1.3f;
+				case "TemperateForest":
+					return 1.1f;
+				case "TropicalRainforest":
+					return 1f;
+				default:
+					return 1.9f;
+			}
+		}
+
+		private void LogFoods()
+		{
+			string log = "";
+
+			foreach (ESItem esi in aFoods)
+			{
+
+				if (esi.thingDef.defName != null)
+				{
+					string strTd = esi.thingDef.defName;
+					log = string.Format("{0}Name: {1}    ", log, strTd);
+				}
+
+				if (esi.thingDef.category != null)
+				{
+					ThingCategory tc = esi.thingDef.category;
+					log = string.Format("{0}Category: {1}    ", log, tc.ToString());
+				}
+
+				if (esi.thingDef.thingCategories != null)
+				{
+					List<ThingCategoryDef> ltc = esi.thingDef.thingCategories;
+					log = string.Format("{0}ThingCategoryDefs: ", log);
+					foreach (ThingCategoryDef tcd in ltc)
+					{
+						log = string.Format("{0}{1}, ", log, tcd.defName);
+					}
+				}
+
+				log = string.Format("{0}\n", log);
+			}
+
+			Log.Message(log);
 		}
     }
 
@@ -77,7 +200,7 @@ namespace Prophecy.PreGame
         public float basePrice;
         public float subtotal;
 
-        public ESItem(string _thingDef, int _thingAmount, float _basePrice, string _stuff = null)
+        public ESItem(string _thingDef, int _thingAmount, float _basePrice, int _itemAmount = 1, string _stuff = null)
         {
             try
             {
@@ -114,7 +237,7 @@ namespace Prophecy.PreGame
                 }
             }
 
-            itemAmount = 1;
+            itemAmount = _itemAmount;
             thingAmount = _thingAmount;
             thingAmountTotal = _thingAmount;
             basePrice = _basePrice;

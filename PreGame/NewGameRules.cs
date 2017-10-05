@@ -28,6 +28,8 @@ namespace Prophecy.PreGame
 			DefDatabase<ThingDef>.GetNamed("WoodLog").BaseMarketValue = 1f;
 			DefDatabase<ThingDef>.GetNamed("Pila").BaseMarketValue = 200f;
 			DefDatabase<ThingDef>.GetNamed("Bow_Great").BaseMarketValue = 500f;
+
+			SettleFoodValues();
 		}
 
 		public static void AddPawnToCurPoints(Pawn _pawn)
@@ -235,6 +237,152 @@ namespace Prophecy.PreGame
 
 			//return floPassionScore;
 			return (floIncrements * floIncrementingReturn * floPassionScore) + floPassionScore;
+		}
+
+		private static void SettleFoodValues()
+		{
+			ThingDef[] aTDs = (from k in DefDatabase<ThingDef>.AllDefs.Where(x => x.category == ThingCategory.Item) select k).ToArray();
+			List<CompProperties> lCPs;
+			CompProperties_Rottable CPR;
+			float floNutri;
+			FoodPreferability eFoodPref;
+			float floFoodPref;
+			float floDaysTillRot;
+			float floNewPrice;
+			string strLog = PadString("NAME", 30) + PadString("NUTRITION", 12) + PadString("PREFERENCE", 20) + PadString("DAYSTOROT", 12) + PadString("OLD", 8) + PadString("NEW", 8) + "\n";
+
+			foreach (ThingDef td in aTDs)
+			{
+				floDaysTillRot = 100f;
+				floNutri = 0f;
+				eFoodPref = FoodPreferability.Undefined;
+				floFoodPref = 1f;
+				floNewPrice = 999f;
+
+				if (td.IsNutritionGivingIngestible)
+				{
+					floNutri = td.ingestible.nutrition;
+					eFoodPref = td.ingestible.preferability;
+					strLog = string.Format("{0}{1}{2}{3}", strLog, PadString(td.defName, 30), PadString(floNutri.ToString(), 12), PadString(eFoodPref.ToString(), 20));
+					try
+					{
+						if ((td.comps != null) && (td.comps.Where(x => x.compClass == typeof(CompRottable)).Count() > 0))
+						{
+							lCPs = td.comps.Where(x => x.compClass == typeof(CompRottable)).ToList();
+							CPR = (CompProperties_Rottable)lCPs.ElementAt(0);
+							floDaysTillRot = CPR.daysToRotStart;
+							strLog = string.Format("{0}{1}", strLog, PadString(floDaysTillRot.ToString(), 12));
+						}
+						else
+						{
+							strLog = string.Format("{0}{1}", strLog, PadString("n/a", 12));
+						}
+					}
+					catch (Exception e)
+					{
+						Log.Message(string.Format("EXCEPTION! {0}.{1} \n\tMESSAGE: {2} \n\tException occurred calling {3} method", e.TargetSite.ReflectedType.Name,
+							e.TargetSite.Name, e.Message, Prophecy.Meta.KrozzyUtilities.GetCallForExceptionThisMethod(System.Reflection.MethodBase.GetCurrentMethod(), e)));
+
+						strLog = string.Format("{0}{1}", strLog, PadString("error", 12));
+					}
+
+					strLog = string.Format("{0}{1}", strLog, PadString(String.Format("{0:0.00}", td.BaseMarketValue), 8));
+
+					switch (eFoodPref)
+					{
+						case FoodPreferability.Undefined:
+							floFoodPref = 1f;
+							break;
+						case FoodPreferability.NeverForNutrition:
+							floFoodPref = .5f;
+							break;
+						case FoodPreferability.DesperateOnly:
+							floFoodPref = .25f;
+							break;
+						case FoodPreferability.RawBad:
+							floFoodPref = 1f;
+							break;
+						case FoodPreferability.RawTasty:
+							floFoodPref = 1.5f;
+							break;
+						case FoodPreferability.MealAwful:
+							floFoodPref = .5f;
+							break;
+						case FoodPreferability.MealSimple:
+							floFoodPref = 1f;
+							break;
+						case FoodPreferability.MealFine:
+							floFoodPref = 2f;
+							break;
+						case FoodPreferability.MealLavish:
+							floFoodPref = 3f;
+							break;
+						default:
+							floFoodPref = 1f;
+							break;
+					}
+
+					switch (td.defName)
+					{
+						case "RawHops":
+							floNutri = floNutri * 2f;
+							break;
+						case "PsychoidLeaves":
+							floNutri = floNutri * 5f;
+							break;
+						case "SmokeleafLeaves":
+							floNutri = floNutri * 3f;
+							break;
+					}
+
+					if ((td.comps != null) && (td.comps.Where(x => x.compClass == typeof(CompHatcher)).Count() > 0))
+					{
+						// set price to animal base value
+					}
+					else
+					{
+						if (td.ingestible.joy > 0)
+						{
+							floNutri = floNutri + (td.ingestible.joy * 3f);
+						}
+
+						floDaysTillRot = floDaysTillRot * .25f;
+						if (floDaysTillRot < 1f)
+						{
+							floDaysTillRot = 1f;
+						}
+
+						floNutri *= 1.5f;
+
+						floNewPrice = 1f + (floNutri * floDaysTillRot * floFoodPref);
+					}
+
+					td.BaseMarketValue = floNewPrice;
+
+					strLog = string.Format("{0}{1}\n", strLog, PadString(String.Format("{0:0.00}", floNewPrice), 8));
+				}
+			}
+
+			//
+			// FOR DEVELOPMENT DON'T DELETE!
+			//
+			//Log.Message(strLog);
+			//
+		}
+
+		static string PadString(string _s, int l)
+		{
+			string strPadded = "";
+			if (_s.Length < l)
+			{
+				strPadded = _s.PadRight(l, ' ');
+			}
+			else
+			{
+				strPadded = _s;
+			}
+
+			return strPadded;
 		}
 	}
 }

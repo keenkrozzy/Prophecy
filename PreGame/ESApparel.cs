@@ -177,7 +177,7 @@ namespace Prophecy.PreGame
 					float floFinalCost = (float)ThingDef.Named(strThingDef).costStuffCount * floBasePrice;
 
 					// Populate ESItem list for return
-					aESI[i] = new ESItem(strThingDef, intThingAmount, floFinalCost, strStuff);
+					aESI[i] = new ESItem(strThingDef, intThingAmount, floFinalCost, 1, strStuff);
 
 					// Logging part 2
 					if (boolLogCalculation)
@@ -189,7 +189,7 @@ namespace Prophecy.PreGame
 				}
 				catch
 				{
-					aESI[i] = new ESItem("Apparel_Tuque", 1, 9001, "Cloth");
+					aESI[i] = new ESItem("Apparel_Tuque", 1, 9001, 1, "Cloth");
 					Log.Message(string.Concat(aAnimals[i].defName, " FAILED ESApparel.GetLeatherApparel."));
 				}
 			}
@@ -377,7 +377,7 @@ namespace Prophecy.PreGame
 				float floFinalCost = (float)ThingDef.Named(strThingDef).costStuffCount * floBasePrice;
 
 				// Populate ESItem list for return
-				aESI[i] = new ESItem(strThingDef, intThingAmount, floFinalCost, strStuff);
+				aESI[i] = new ESItem(strThingDef, intThingAmount, floFinalCost, 1, strStuff);
 
 				// Logging part 2
 				if (boolLogCalculation)
